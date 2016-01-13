@@ -110,6 +110,17 @@ void loop(void)
   Serial.print((float)event.orientation.z);
   Serial.println(F(""));
 
+  /* Quaternions */
+  imu::Quaternion quat = bno.getQuat();
+  Serial.print(F("Quaternions: "));
+  Serial.print(quat.w(),4);
+  Serial.print(F(" "));
+  Serial.print(quat.x(),4);
+  Serial.print(F(" "));
+  Serial.print(quat.y(),4);
+  Serial.print(F(" "));
+  Serial.println(quat.z(),4);
+
   /* Also send calibration data for each sensor. */
   uint8_t sys, gyro, accel, mag = 0;
   bno.getCalibration(&sys, &gyro, &accel, &mag);
@@ -126,16 +137,18 @@ void loop(void)
   int sensor[10];
   //int sensor1, sensor2, sensor3, sensor4, sensor5, degrees1, degrees2, degrees3, degrees4, degrees5;
   int degrees[10];
-  for (int i = 0; i < 2; i++){
+  for (int i = 0; i <= 2; i++){
     sensor[i] = analogRead(14+i); //A1 Input: 26.1 kOhm Series Resistor
-    degrees[i] = map(sensor[i], 465, 710, 0, 120);
+    degrees[i] = map(sensor[i], 700, 900, 0, 120);
   }
   //Serial.print("26.1kOhm resistor analog input: ");
   //Serial.print(sensor[0],DEC);
   Serial.print("Fingers: ");
   Serial.print(degrees[0],DEC);
   Serial.print(F(" "));
-  Serial.println(degrees[1],DEC);
+  Serial.print(degrees[1],DEC);
+  Serial.print(F(" "));
+  Serial.println(degrees[2],DEC);
   ////// Flex Sensor Degrees
 
   /*Get acceleration information*/
