@@ -42,7 +42,7 @@ void draw()
   pushMatrix();
     
   // orthographic projection
-  ortho(-width/2, width/2, -height/2, height/2); 
+  //ortho(-width/2, width/2, -height/2, height/2); 
   
   // calculate displacement
   //thresh = 0.2;
@@ -53,9 +53,9 @@ void draw()
   translate(width/2+y,height/2,0);
   
   // Rotate shapes around the X/Y/Z axis (values in radians, 0..Pi*2)
-  rotateZ(roll);
-  rotateX(pitch);
+  rotateX(-pitch);
   rotateY(yaw);
+  rotateZ(-roll);
   //noStroke();
   
   drawHand();
@@ -106,10 +106,26 @@ void serialEvent(Serial p)
       q2 = float(list[3]);
       q3 = float(list[4]);
       
-      roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
-      pitch = asin(2*(q0*q2-q3*q1));
-      yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
+      //roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+      //pitch = asin(2*(q0*q2-q3*q1));
+      //yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
       
+      if (!(abs(q1*q2+q0*q3)==0.5))
+      {  
+        pitch = atan2(2*q2*q0-2*q1*q3,1-2*q2*q2-2*q3*q3);
+        yaw = asin(2*q1*q2+2*q3*q0);
+        roll = atan2(2*q1*q0-2*q2*q3,1-2*q1*q1-2*q3*q3);
+      }
+      else if (q1*q2+q0*q3 > 0)
+      {
+        pitch = 2*atan2(q1,q0);
+        roll = 0.0F;
+      }
+      else
+      {
+        pitch = -2*atan2(q1,q0);
+        roll = 0.0F;
+      }
     }
     
     if ( (list.length > 0) && (list[0].equals("Acceleration:")) )
@@ -149,16 +165,16 @@ void drawHand() {
   // white fingers
   fill(255, 255, 255);
   // index finger
-  translate(40,0,57.5); box(20,30,40);
-  translate(0,0,40); rotateX(radians(-indexFingerDeg)); box(20,30,40);
+  translate(40,0,67.5); box(20,30,60);
+  translate(0,0,50); rotateX(radians(-indexFingerDeg)); box(20,30,50);
   rotateX(radians(indexFingerDeg));
   // middle finger
-  translate(-30,0,-40); box(20,30,40);
-  translate(0,0,45); rotateX(radians(-middleFingerDeg)); box(20,30,50);
+  translate(-30,0,-45); box(20,30,70);
+  translate(0,0,65); rotateX(radians(-middleFingerDeg)); box(20,30,60);
   rotateX(radians(middleFingerDeg));
   // ring finger
-  translate(-30,0,-45); box(20,30,40);
-  translate(0,0,40); rotateX(radians(-ringFingerDeg)); box(20,30,40);
+  translate(-30,0,-70); box(20,30,60);
+  translate(0,0,55); rotateX(radians(-ringFingerDeg)); box(20,30,50);
   rotateX(radians(ringFingerDeg));
 }
 
