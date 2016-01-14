@@ -26,7 +26,7 @@ boolean      printSerial = false;
 void setup()
 {
   size(640, 480, P3D);
-  frameRate(25);
+  frameRate(50);
   
   // Serial port setup.
   String[] serialConfig = loadStrings(serialConfigFile);
@@ -42,7 +42,7 @@ void draw()
   pushMatrix();
     
   // orthographic projection
-  //ortho(0, width/2, 0, height/2); 
+  ortho(-width/2, width/2, -height/2, height/2); 
   
   // calculate displacement
   //thresh = 0.2;
@@ -157,8 +157,8 @@ void drawHand() {
   translate(0,0,45); rotateX(radians(-middleFingerDeg)); box(20,30,50);
   rotateX(radians(middleFingerDeg));
   // ring finger
-  translate(-30,0,-40); box(20,30,40);
-  translate(0,0,45); rotateX(radians(-ringFingerDeg)); box(20,30,40);
+  translate(-30,0,-45); box(20,30,40);
+  translate(0,0,40); rotateX(radians(-ringFingerDeg)); box(20,30,40);
   rotateX(radians(ringFingerDeg));
 }
 

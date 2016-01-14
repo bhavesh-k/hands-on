@@ -28,7 +28,7 @@
 */
 
 /* Set the delay between fresh samples */
-#define BNO055_SAMPLERATE_DELAY_MS (40)
+#define BNO055_SAMPLERATE_DELAY_MS (20)
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
