@@ -1,10 +1,11 @@
+import g4p_controls.*;
 import processing.serial.*;
 
 float q0 = 0.0F; float q1 = 0.0F; float q2 = 0.0F; float q3 = 0.0F; // Quaternions
 
-float roll  = 0.0F;
-float pitch = 0.0F;
-float yaw   = 0.0F;
+float roll  = 0.0F; float rollOffset = 0.0F;
+float pitch = 0.0F; float pitchOffset = 0.0F;
+float yaw   = 0.0F; float yawOffset = 0.0F;
 float temp  = 0.0F;
 float alt   = 0.0F;
 
@@ -25,7 +26,8 @@ boolean      printSerial = false;
 
 void setup()
 {
-  size(640, 480, P3D);
+  size(1280, 960, P3D);
+  createGUI();
   frameRate(50);
   
   // Serial port setup.
@@ -53,9 +55,11 @@ void draw()
   translate(width/2+y,height/2,0);
   
   // Rotate shapes around the X/Y/Z axis (values in radians, 0..Pi*2)
-  rotateX(-pitch);
-  rotateY(yaw);
-  rotateZ(-roll);
+  rotateX(-pitch + pitchOffset);
+  rotateY(yaw - yawOffset);
+  rotateZ(-roll + rollOffset);
+  
+  lbl_title.setText(str((pitch)));
   //noStroke();
   
   drawHand();
@@ -160,22 +164,28 @@ void setSerialPort(String portName) {
 void drawHand() {
   // yellow palm
   fill(246, 225, 65);
-  box(100,30,75);
+  box(200,60,150);
   
   // white fingers
   fill(255, 255, 255);
   // index finger
-  translate(40,0,67.5); box(20,30,60);
-  translate(0,0,50); rotateX(radians(-indexFingerDeg)); box(20,30,50);
+  translate(80,0,135); box(40,60,120);
+  translate(0,0,100); rotateX(radians(-indexFingerDeg)); box(40,60,100);
   rotateX(radians(indexFingerDeg));
   // middle finger
-  translate(-30,0,-45); box(20,30,70);
-  translate(0,0,65); rotateX(radians(-middleFingerDeg)); box(20,30,60);
+  translate(-60,0,-90); box(40,60,140);
+  translate(0,0,130); rotateX(radians(-middleFingerDeg)); box(40,60,120);
   rotateX(radians(middleFingerDeg));
   // ring finger
-  translate(-30,0,-70); box(20,30,60);
-  translate(0,0,55); rotateX(radians(-ringFingerDeg)); box(20,30,50);
+  translate(-60,0,-140); box(40,60,120);
+  translate(0,0,110); rotateX(radians(-ringFingerDeg)); box(40,60,100);
   rotateX(radians(ringFingerDeg));
+}
+
+void calibrate_hand() {
+  rollOffset = roll;
+  pitchOffset = pitch;
+  yawOffset = yaw + PI;  
 }
 
 //void signTranslate
