@@ -134,21 +134,35 @@ void loop(void)
   Serial.println(mag, DEC);
   
   ////// Flex Sensor Degrees
-  int sensor[10];
-  //int sensor1, sensor2, sensor3, sensor4, sensor5, degrees1, degrees2, degrees3, degrees4, degrees5;
-  int degrees[10];
-  for (int i = 0; i <= 2; i++){
-    sensor[i] = analogRead(14+i); //A1 Input: 26.1 kOhm Series Resistor
+  int sensor[8];
+  int degrees[8];
+  int pins[8];
+
+  // analog pins on teensy
+  pins[0] = 14; pins[1] = 15; pins[2] = 16; pins[3] = 17;
+  pins[4] = 20; pins[5] = 21; pins[6] = 22; pins[7] = 23;
+  
+  for (int i = 0; i < 8; i++){
+    sensor[i] = analogRead(pins[i]); //A1 Input: 26.1 kOhm Series Resistor
     degrees[i] = map(sensor[i], 700, 900, 0, 120);
   }
+
   //Serial.print("26.1kOhm resistor analog input: ");
   //Serial.print(sensor[0],DEC);
   Serial.print("Fingers: ");
-  Serial.print(degrees[0],DEC);
-  Serial.print(F(" "));
   Serial.print(degrees[1],DEC);
   Serial.print(F(" "));
-  Serial.println(degrees[2],DEC);
+  Serial.print(degrees[4],DEC);
+  Serial.print(F(" "));
+  Serial.print(degrees[7],DEC);
+  Serial.print(F(" "));
+  Serial.print(degrees[5],DEC);
+  Serial.print(F(" "));
+  Serial.print(degrees[2],DEC);
+  Serial.print(F(" "));
+  Serial.print(degrees[0],DEC);
+  Serial.print(F(" "));
+  Serial.println(degrees[3],DEC);
   ////// Flex Sensor Degrees
 
   /*Get acceleration information*/

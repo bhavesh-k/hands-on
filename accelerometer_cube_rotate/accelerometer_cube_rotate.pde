@@ -2,16 +2,18 @@ import g4p_controls.*;
 import processing.serial.*;
 
 float q0 = 0.0F; float q1 = 0.0F; float q2 = 0.0F; float q3 = 0.0F; // Quaternions
+float q0off = 0.0F; float q1off = 0.0F; float q2off = 0.0F; float q3off = 0.0F; // Quaternion offsets (for calibration)
 
-float roll  = 0.0F; float rollOffset = 0.0F;
-float pitch = 0.0F; float pitchOffset = 0.0F;
-float yaw   = 0.0F; float yawOffset = 0.0F;
+float roll  = 0.0F;
+float pitch = 0.0F;
+float yaw   = 0.0F;
 float temp  = 0.0F;
 float alt   = 0.0F;
 
-float indexFingerDeg = 0.0F;
-float middleFingerDeg = 0.0F;
-float ringFingerDeg = 0.0F;
+float indexFingerDeg = 0.0F; float indexKnuckleDeg = 0.0F;
+float middleFingerDeg = 0.0F; float middleKnuckleDeg = 0.0F;
+float ringFingerDeg = 0.0F; float ringKnuckleDeg = 0.0F;
+float pinkieFingerDeg = 0.0F;
 
 
 float xacc = 0.0F; float xvel = 0.0F; float x = 0.0F;
@@ -55,9 +57,9 @@ void draw()
   translate(width/2+y,height/2,0);
   
   // Rotate shapes around the X/Y/Z axis (values in radians, 0..Pi*2)
-  rotateX(-pitch + pitchOffset);
-  rotateY(yaw - yawOffset);
-  rotateZ(-roll + rollOffset);
+  rotateX(-pitch);
+  rotateY(yaw);
+  rotateZ(-roll);
   
   lbl_title.setText(str((pitch)));
   //noStroke();
@@ -76,12 +78,7 @@ void serialEvent(Serial p)
   if ((incoming.length() > 8))
   {
     String[] list = split(incoming, " ");
-    //if ( (list.length > 0) && (list[0].equals("Orientation:")) ) 
-    //{
-    //  roll  = float(list[3]); // Roll = Z
-    //  pitch = float(list[2]); // Pitch = Y 
-    //  yaw   = float(list[1]); // Yaw/Heading = X
-    //}
+
     if ( (list.length > 0) && (list[0].equals("Alt:")) ) 
     {
       alt  = float(list[1]);
@@ -100,8 +97,12 @@ void serialEvent(Serial p)
     if ( (list.length > 0) && (list[0].equals("Fingers:")) )
     {
      indexFingerDeg  = float(list[1]);
-     middleFingerDeg = float(list[2]);
-     ringFingerDeg = float(list[3]);
+     indexKnuckleDeg = float(list[2]);
+     middleFingerDeg = float(list[3]);
+     middleKnuckleDeg = float(list[4]);
+     ringFingerDeg = float(list[5]);
+     ringKnuckleDeg = float(list[6]);
+     pinkieFingerDeg = float(list[7]);
     }
     if ( (list.length > 0) && (list[0].equals("Quaternions:")) )
     {
@@ -110,10 +111,7 @@ void serialEvent(Serial p)
       q2 = float(list[3]);
       q3 = float(list[4]);
       
-      //roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
-      //pitch = asin(2*(q0*q2-q3*q1));
-      //yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
-      
+      // Angle calculation from quaternions
       if (!(abs(q1*q2+q0*q3)==0.5))
       {  
         pitch = atan2(2*q2*q0-2*q1*q3,1-2*q2*q2-2*q3*q3);
@@ -169,23 +167,29 @@ void drawHand() {
   // white fingers
   fill(255, 255, 255);
   // index finger
-  translate(80,0,135); box(40,60,120);
+  translate(80,0,135);
+  //rotateX(radians(-indexKnuckleDeg));
+  box(40,60,120);
   translate(0,0,100); rotateX(radians(-indexFingerDeg)); box(40,60,100);
-  rotateX(radians(indexFingerDeg));
+  rotateX(radians(indexFingerDeg)); //rotateX(radians(indexKnuckleDeg));
   // middle finger
-  translate(-60,0,-90); box(40,60,140);
+  translate(-60,0,-90); //rotateX(radians(-middleKnuckleDeg)); 
+  box(40,60,140);
   translate(0,0,130); rotateX(radians(-middleFingerDeg)); box(40,60,120);
-  rotateX(radians(middleFingerDeg));
+  rotateX(radians(middleFingerDeg)); //rotateX(radians(middleKnuckleDeg));
   // ring finger
-  translate(-60,0,-140); box(40,60,120);
+  translate(-60,0,-140); //rotateX(radians(-ringKnuckleDeg)); 
+  box(40,60,120);
   translate(0,0,110); rotateX(radians(-ringFingerDeg)); box(40,60,100);
-  rotateX(radians(ringFingerDeg));
+  rotateX(radians(ringFingerDeg)); //rotateX(radians(ringKnuckleDeg));
+  // pinkie finger
+  translate(-60,0,-140); box(40,60,120);
+  translate(0,0,110); rotateX(radians(-pinkieFingerDeg)); box(40,60,100);
+  rotateX(radians(pinkieFingerDeg));
 }
 
 void calibrate_hand() {
-  rollOffset = roll;
-  pitchOffset = pitch;
-  yawOffset = yaw + PI;  
+  
 }
 
 //void signTranslate
