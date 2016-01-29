@@ -56,7 +56,7 @@ void draw()
   // Move hand from 0,0 in top left to center of screen.
   translate(width/2+y,height/2,0);
   
-  // Rotate shapes around the X/Y/Z axis (values in radians, 0..Pi*2)
+  // Rotate shapes around the X/Y/Z axis
   rotateX(-pitch);
   rotateY(yaw);
   rotateZ(-roll);
@@ -106,10 +106,10 @@ void serialEvent(Serial p)
     }
     if ( (list.length > 0) && (list[0].equals("Quaternions:")) )
     {
-      q0 = float(list[1]);
-      q1 = float(list[2]);
-      q2 = float(list[3]);
-      q3 = float(list[4]);
+      q0 = float(list[1]) + q0off;
+      q1 = float(list[2]) + q1off;
+      q2 = float(list[3]) + q2off;
+      q3 = float(list[4]) + q3off;
       
       // Angle calculation from quaternions
       if (!(abs(q1*q2+q0*q3)==0.5))
@@ -171,17 +171,22 @@ void drawHand() {
   //rotateX(radians(-indexKnuckleDeg));
   box(40,60,120);
   translate(0,0,100); rotateX(radians(-indexFingerDeg)); box(40,60,100);
-  rotateX(radians(indexFingerDeg)); //rotateX(radians(indexKnuckleDeg));
+  rotateX(radians(indexFingerDeg));
+  //translate(0,0,-100); rotateX(radians(indexKnuckleDeg));
   // middle finger
-  translate(-60,0,-90); //rotateX(radians(-middleKnuckleDeg)); 
+  translate(-60,0,-90);
+  //rotateX(radians(-middleKnuckleDeg)); 
   box(40,60,140);
   translate(0,0,130); rotateX(radians(-middleFingerDeg)); box(40,60,120);
-  rotateX(radians(middleFingerDeg)); //rotateX(radians(middleKnuckleDeg));
+  rotateX(radians(middleFingerDeg));
+  //translate(0,0,-130); rotateX(radians(middleKnuckleDeg));
   // ring finger
-  translate(-60,0,-140); //rotateX(radians(-ringKnuckleDeg)); 
+  translate(-60,0,-140);
+  //rotateX(radians(-ringKnuckleDeg)); 
   box(40,60,120);
   translate(0,0,110); rotateX(radians(-ringFingerDeg)); box(40,60,100);
-  rotateX(radians(ringFingerDeg)); //rotateX(radians(ringKnuckleDeg));
+  rotateX(radians(ringFingerDeg)); 
+  //translate(0,0,-110); rotateX(radians(ringKnuckleDeg));
   // pinkie finger
   translate(-60,0,-140); box(40,60,120);
   translate(0,0,110); rotateX(radians(-pinkieFingerDeg)); box(40,60,100);
@@ -189,7 +194,8 @@ void drawHand() {
 }
 
 void calibrate_hand() {
-  
+  // use QUATERNIONS!
+  q0off = -q0; q1off = -q1; q2off = -q2; q3off = -q3;
 }
 
 //void signTranslate

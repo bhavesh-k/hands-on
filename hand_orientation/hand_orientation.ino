@@ -1,3 +1,4 @@
+
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
@@ -65,10 +66,10 @@ void setup(void)
   Serial.println("Orientation Sensor Test"); Serial.println("");
 
   /* Initialise the sensor */
-  if(!bno.begin())
+  if(!bno.begin(bno.OPERATION_MODE_IMUPLUS))
   {
     /* There was a problem detecting the BNO055 ... check your connections */
-    Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+    Serial.println("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
     while(1);
   }
 
@@ -76,6 +77,11 @@ void setup(void)
 
   /* Display some basic information on this sensor */
   displaySensorDetails();
+
+  uint16_t modeRead = bno.readMode();
+  Serial.print("Mode:  ");
+  Serial.println(modeRead);
+  
 }
 
 /**************************************************************************/
@@ -101,13 +107,13 @@ void loop(void)
          +----------+
   */
 
-  /* The processing sketch expects data as roll, pitch, heading */
+  /* The processing sketch expects data as roll, pitch, yaw */
   Serial.print(F("Orientation: "));
-  Serial.print((float)event.orientation.x);
+  Serial.print((float)event.orientation.x); // yaw
   Serial.print(F(" "));
-  Serial.print((float)event.orientation.y);
+  Serial.print((float)event.orientation.y); // pitch
   Serial.print(F(" "));
-  Serial.print((float)event.orientation.z);
+  Serial.print((float)event.orientation.z); // roll
   Serial.println(F(""));
 
   /* Quaternions */
