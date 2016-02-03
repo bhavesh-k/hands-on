@@ -74,69 +74,80 @@ void serialEvent(Serial p)
 {
   String incoming = p.readString();
   println(incoming);
-  
   if ((incoming.length() > 8))
   {
-    String[] list = split(incoming, " ");
-
-    if ( (list.length > 0) && (list[0].equals("Alt:")) ) 
-    {
-      alt  = float(list[1]);
-    }
-    if ( (list.length > 0) && (list[0].equals("Temp:")) ) 
-    {
-      temp  = float(list[1]);
-    }
-    if ( (list.length > 0) && (list[0].equals("Calibration:")) )
-    {
-      int sysCal   = int(list[1]);
-      int gyroCal  = int(list[2]);
-      int accelCal = int(list[3]);
-      int magCal   = int(list[4]);
-    }
-    if ( (list.length > 0) && (list[0].equals("Fingers:")) )
-    {
-     indexFingerDeg  = float(list[1]);
-     indexKnuckleDeg = float(list[2]);
-     middleFingerDeg = float(list[3]);
-     middleKnuckleDeg = float(list[4]);
-     ringFingerDeg = float(list[5]);
-     ringKnuckleDeg = float(list[6]);
-     pinkieFingerDeg = float(list[7]);
-    }
-    if ( (list.length > 0) && (list[0].equals("Quaternions:")) )
-    {
-      q0 = float(list[1]) + q0off;
-      q1 = float(list[2]) + q1off;
-      q2 = float(list[3]) + q2off;
-      q3 = float(list[4]) + q3off;
+    String[] list = splitTokens(incoming); //splits by whitespace characters //<>//
+    if ( list.length > 1)  
+    {  
+      if ( list[0].equals("Alt:") ) 
+      {
+        alt  = float(list[1]);
+      }
+      if ( list[0].equals("Temp:") ) 
+      {
+        temp  = float(list[1]);
+      }
       
-      // Angle calculation from quaternions
-      if (!(abs(q1*q2+q0*q3)==0.5))
-      {  
-        pitch = atan2(2*q2*q0-2*q1*q3,1-2*q2*q2-2*q3*q3);
-        yaw = asin(2*q1*q2+2*q3*q0);
-        roll = atan2(2*q1*q0-2*q2*q3,1-2*q1*q1-2*q3*q3);
-      }
-      else if (q1*q2+q0*q3 > 0)
+      // Calibration Values
+      if ( list[0].equals("System:") )
       {
-        pitch = 2*atan2(q1,q0);
-        roll = 0.0F;
+        int sysCal   = int(list[1]);
+        int gyroCal  = int(list[3]);
+        int accelCal = int(list[5]);
+        int magCal   = int(list[7]);
       }
-      else
+      
+      // Fingers Part 1
+      if ( list[0].equals("Index:") )
       {
-        pitch = -2*atan2(q1,q0);
-        roll = 0.0F;
+       indexFingerDeg  = float(list[1]);
+       middleFingerDeg = float(list[3]);
+       ringFingerDeg = float(list[5]);
+       pinkieFingerDeg = float(list[7]);
+      }
+      // Fingers Part 2
+      if ( list[0].equals("IndexKnuckle:") )
+      {
+        indexKnuckleDeg = float(list[1]);
+        middleKnuckleDeg = float(list[3]);
+        ringKnuckleDeg = float(list[5]);
+      }
+      
+      // Quaternions
+      if ( list[0].equals("qW:") )
+      {
+        q0 = float(list[1]) + q0off;
+        q1 = float(list[3]) + q1off;
+        q2 = float(list[5]) + q2off;
+        q3 = float(list[7]) + q3off;
+        
+        // Angle calculation from quaternions
+        if (!(abs(q1*q2+q0*q3)==0.5))
+        {  
+          pitch = atan2(2*q2*q0-2*q1*q3,1-2*q2*q2-2*q3*q3);
+          yaw = asin(2*q1*q2+2*q3*q0);
+          roll = atan2(2*q1*q0-2*q2*q3,1-2*q1*q1-2*q3*q3);
+        }
+        else if (q1*q2+q0*q3 > 0)
+        {
+          pitch = 2*atan2(q1,q0);
+          roll = 0.0F;
+        }
+        else
+        {
+          pitch = -2*atan2(q1,q0);
+          roll = 0.0F;
+        }
+      }
+      
+      // Linear Acceleration
+      if (list[0].equals("aX:"))
+      {
+        xacc = float(list[1]);
+        yacc = float(list[3]);
+        zacc = float(list[5]);
       }
     }
-    
-    if ( (list.length > 0) && (list[0].equals("Acceleration:")) )
-    {
-      xacc = float(list[1]);
-      yacc = float(list[2]);
-      zacc = float(list[3]);
-    }
-    
   }
 }
 
