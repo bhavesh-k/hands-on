@@ -2,7 +2,6 @@ import g4p_controls.*;
 import processing.serial.*;
 
 float q0 = 0.0F; float q1 = 0.0F; float q2 = 0.0F; float q3 = 0.0F; // Quaternions
-float q0off = 0.0F; float q1off = 0.0F; float q2off = 0.0F; float q3off = 0.0F; // Quaternion offsets (for calibration)
 
 float roll  = 0.0F;
 float pitch = 0.0F;
@@ -35,7 +34,7 @@ void setup()
   // Serial port setup.
   String[] serialConfig = loadStrings(serialConfigFile);
   print(serialConfig);
-  setSerialPort(serialConfig[0]);
+  setSerialPort("COM5");
 }
  
 void draw()
@@ -57,9 +56,9 @@ void draw()
   translate(width/2+y,height/2,0);
   
   // Rotate shapes around the X/Y/Z axis
-  rotateX(-pitch);
+  rotateX(pitch);
   rotateY(yaw);
-  rotateZ(-roll);
+  rotateZ(roll);
   
   lbl_title.setText(str((pitch)));
   //noStroke();
@@ -116,10 +115,10 @@ void serialEvent(Serial p)
       // Quaternions
       if ( list[0].equals("qW:") )
       {
-        q0 = float(list[1]) + q0off;
-        q1 = float(list[3]) + q1off;
-        q2 = float(list[5]) + q2off;
-        q3 = float(list[7]) + q3off;
+        q0 = float(list[1]);
+        q1 = float(list[3]);
+        q2 = float(list[5]);
+        q3 = float(list[7]);
         
         // Angle calculation from quaternions
         if (!(abs(q1*q2+q0*q3)==0.5))
@@ -177,36 +176,54 @@ void drawHand() {
   
   // white fingers
   fill(255, 255, 255);
+  
   // index finger
-  translate(80,0,135);
+  translate(-80,0,-135);
   //rotateX(radians(-indexKnuckleDeg));
   box(40,60,120);
-  translate(0,0,100); rotateX(radians(-indexFingerDeg)); box(40,60,100);
-  rotateX(radians(indexFingerDeg));
-  //translate(0,0,-100); rotateX(radians(indexKnuckleDeg));
+  translate(0,0,-110);
+  //rotateX(radians(-indexFingerDeg));
+  box(40,60,100);
+  translate(0,0,110);
+  //rotateX(radians(indexFingerDeg));
+  translate(50,0,80);
+  //rotateX(radians(indexKnuckleDeg));
+  
   // middle finger
-  translate(-60,0,-90);
+  translate(0,0,-90);
   //rotateX(radians(-middleKnuckleDeg)); 
   box(40,60,140);
-  translate(0,0,130); rotateX(radians(-middleFingerDeg)); box(40,60,120);
-  rotateX(radians(middleFingerDeg));
-  //translate(0,0,-130); rotateX(radians(middleKnuckleDeg));
-  // ring finger
-  translate(-60,0,-140);
-  //rotateX(radians(-ringKnuckleDeg)); 
+  translate(0,0,-130);
+  //rotateX(radians(-middleFingerDeg));
   box(40,60,120);
-  translate(0,0,110); rotateX(radians(-ringFingerDeg)); box(40,60,100);
-  rotateX(radians(ringFingerDeg)); 
-  //translate(0,0,-110); rotateX(radians(ringKnuckleDeg));
+  //rotateX(radians(middleFingerDeg));
+  translate(0,0,130);
+  translate(50,0,140);
+  //rotateX(radians(middleKnuckleDeg));
+  
+  // ring finger
+  translate(0,0,-130);
+  rotateX(radians(ringKnuckleDeg)); 
+  box(40,60,120);
+  translate(0,0,-60);
+  rotateX(radians(ringFingerDeg));
+  translate(0,0,-50);
+  box(40,60,100);
+  translate(0,0,50);
+  rotateX(radians(-ringFingerDeg));
+  translate(0,0,60);
+  rotateX(radians(-ringKnuckleDeg));
+  translate(50,0,130);
+  
   // pinkie finger
-  translate(-60,0,-140); box(40,60,120);
-  translate(0,0,110); rotateX(radians(-pinkieFingerDeg)); box(40,60,100);
-  rotateX(radians(pinkieFingerDeg));
+  translate(0,0,-110);
+  box(40,60,80);
+  translate(0,0,-75);
+  //rotateX(radians(-pinkieFingerDeg));
+  box(40,60,70);
+  //rotateX(radians(pinkieFingerDeg));
 }
 
 void calibrate_hand() {
   // use QUATERNIONS!
-  q0off = -q0; q1off = -q1; q2off = -q2; q3off = -q3;
 }
-
-//void signTranslate
