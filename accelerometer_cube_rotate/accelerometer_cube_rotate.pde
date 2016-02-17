@@ -34,7 +34,7 @@ void setup()
   // Serial port setup.
   String[] serialConfig = loadStrings(serialConfigFile);
   print(serialConfig);
-  setSerialPort("COM5");
+  setSerialPort("/dev/ttyACM0");
 }
  
 void draw()

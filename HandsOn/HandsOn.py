@@ -18,7 +18,7 @@ def parseSerialHandData( line ):
     lineList = line.split()
     if len(lineList) > 1:
         #print(lineList) # Testing Purposes
-        if lineList[0] == "Alt:": 
+        if lineList[0] == "Alt:":
             alt = float(lineList[1])
         elif lineList[0] == "Temp:":
             temp = float(lineList[1])
@@ -28,7 +28,7 @@ def parseSerialHandData( line ):
             gyroCal  = int(lineList[3])
             accelCal = int(lineList[5])
             magCal   = int(lineList[7])
-      
+
         # Fingers Part 1
         elif lineList[0] == "Index:":
             indexFingerDeg = float(lineList[1])
@@ -44,22 +44,22 @@ def parseSerialHandData( line ):
 
         # Quaternions
         elif lineList[0] == "qW:":
-            q0 = float(lineList[1]) + q0off
-            q1 = float(lineList[3]) + q1off
-            q2 = float(lineList[5]) + q2off
-            q3 = float(lineList[7]) + q3off
-        
+            q0 = float(lineList[1])
+            q1 = float(lineList[3])
+            q2 = float(lineList[5])
+            q3 = float(lineList[7])
+
             # Angle calculation from quaternions
-            if (!(abs(q1*q2+q0*q3)==0.5)):
-                pitch = atan2(2*q2*q0-2*q1*q3,1-2*q2*q2-2*q3*q3)
-                yaw = asin(2*q1*q2+2*q3*q0)
-                roll = atan2(2*q1*q0-2*q2*q3,1-2*q1*q1-2*q3*q3)
-            elif (q1*q2+q0*q3 > 0):        
-                pitch = 2*atan2(q1,q0)
+            if (abs(q1*q2+q0*q3)!=0.5):
+                pitch = math.atan2(2*q2*q0-2*q1*q3,1-2*q2*q2-2*q3*q3)
+                yaw = math.asin(2*q1*q2+2*q3*q0)
+                roll = math.atan2(2*q1*q0-2*q2*q3,1-2*q1*q1-2*q3*q3)
+            elif (q1*q2+q0*q3 > 0):
+                pitch = 2*math.atan2(q1,q0)
                 roll = 0.0
             else:
-                pitch = -2*atan2(q1,q0)
-                roll = 0.0     
+                pitch = -2*math.atan2(q1,q0)
+                roll = 0.0
 
         #Linear Acceleration
         elif lineList[0] == "aX:":
@@ -70,15 +70,16 @@ def parseSerialHandData( line ):
 
 def main():
     print('    Teensy Serial Read Starting ')
-    ser = serial.Serial('COM3', 9600, timeout=5) #Open serial port
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5) #Open serial port
     print('    Waiting 5 seconds to establish connection to Teensy...')
     time.sleep(5) # Sleep for 5 seconds while teensy to sets up
     print('Serial Name: ', ser.name)
     print('\n')
-    print('Serial Read: ')
-    line = ser.readline #Read line until \n
-    print(line) 
-    parseSerialHandData(line)    
+
+    while True:
+        line = ser.readline() #Read line until \n
+        print(line)
+        parseSerialHandData(line)
 
     ser.close()
 ## main() end
