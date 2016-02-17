@@ -231,18 +231,29 @@ void loop(void)
   /* Flex Sensor Degrees */
   int flexRaw[8];
   int flexDegrees[8];
+  int flexDegCal[8][2];
   int flexPinMap[8];
   /* Mapping to Analog pins on teensy 
     from flexPinMap[0] to flexPinMap[7]
     Index, IndexKnuckle, Middle, MiddleKnuckle
-    Ring, Ring Knuckle, Pinky, -
+    Ring, Ring Knuckle, Pinky, Thumb
   */
   flexPinMap[0] = 15; flexPinMap[1] = 20; flexPinMap[2] = 23; flexPinMap[3] = 21;
   flexPinMap[4] = 16; flexPinMap[5] = 14; flexPinMap[6] = 17; flexPinMap[7] = 22;
+
+  // Calibrated mapping from analog values to degrees for each joint
+  flexDegCal[0][0] = 728; flexDegCal[0][1] = 835;
+  flexDegCal[1][0] = 713; flexDegCal[1][1] = 825;
+  flexDegCal[2][0] = 708; flexDegCal[2][1] = 850;
+  flexDegCal[3][0] = 689; flexDegCal[3][1] = 808;
+  flexDegCal[4][0] = 702; flexDegCal[4][1] = 863;
+  flexDegCal[5][0] = 701; flexDegCal[5][1] = 765;
+  flexDegCal[6][0] = 745; flexDegCal[6][1] = 835;
+  flexDegCal[7][0] = 733; flexDegCal[7][1] = 850;
   
   for (int i = 0; i < 8; i++){
     flexRaw[i] = analogRead(flexPinMap[i]);
-    flexDegrees[i] = map(flexRaw[i], 700, 900, 0, 120);
+    flexDegrees[i] = map(flexRaw[i], flexDegCal[i][0], flexDegCal[i][1], 0, 90);
   }
 
   Serial.println("FlexSensorBending(degrees)");
@@ -264,9 +275,36 @@ void loop(void)
   Serial.print(flexDegrees[3],DEC);
   Serial.print(F(" "));
   Serial.print("RingKnuckle: ");
-  Serial.println(flexDegrees[5],DEC);
+  Serial.print(flexDegrees[5],DEC);
+  Serial.print(F(" "));
+  Serial.print("Thumb: ");
+  Serial.print(flexDegrees[7],DEC);
   Serial.println(F(""));
-  Serial.println(F(""));
+
+//  Serial.println("FlexSensorBending(degrees)");
+//  Serial.print("   Index: ");
+//  Serial.print(flexRaw[0],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("Middle: ");
+//  Serial.print(flexRaw[2],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("Ring: ");
+//  Serial.print(flexRaw[4],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("Pinky: ");
+//  Serial.println(flexRaw[6],DEC);
+//  Serial.print("   IndexKnuckle: ");
+//  Serial.print(flexRaw[1],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("MiddleKnuckle: ");
+//  Serial.print(flexRaw[3],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("RingKnuckle: ");
+//  Serial.println(flexRaw[5],DEC);
+//  Serial.print(F(""));
+//  Serial.print("Thumb: ");
+//  Serial.print(flexRaw[7],DEC);
+//  Serial.println(F(""));
   
   delay(BNO055_SAMPLERATE_DELAY_MS);
 }

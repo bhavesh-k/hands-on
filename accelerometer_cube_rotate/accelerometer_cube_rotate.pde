@@ -60,9 +60,9 @@ void draw()
   rotateY(yaw);
   rotateZ(roll);
   
-  lbl_title.setText(str((pitch)));
-  //noStroke();
+  lbl_title.setText("Hand");
   
+  //noStroke();
   drawHand();
     
   popMatrix();
@@ -178,32 +178,41 @@ void drawHand() {
   fill(255, 255, 255);
   
   // index finger
-  translate(-80,0,-135);
-  //rotateX(radians(-indexKnuckleDeg));
+  translate(-80,0,-75);
+  rotateX(radians(indexKnuckleDeg));
+  translate(0,0,-60);
   box(40,60,120);
-  translate(0,0,-110);
-  //rotateX(radians(-indexFingerDeg));
+  translate(0,0,-60);
+  rotateX(radians(indexFingerDeg));
+  translate(0,0,-50);
   box(40,60,100);
-  translate(0,0,110);
-  //rotateX(radians(indexFingerDeg));
-  translate(50,0,80);
-  //rotateX(radians(indexKnuckleDeg));
-  
+  translate(0,0,50);
+  rotateX(radians(-indexFingerDeg));
+  translate(0,0,60);
+  translate(0,0,60);
+  rotateX(radians(-indexKnuckleDeg));
+  translate(50,0,20);
+    
   // middle finger
-  translate(0,0,-90);
-  //rotateX(radians(-middleKnuckleDeg)); 
+  translate(0,0,-20);
+  rotateX(radians(middleKnuckleDeg));
+  translate(0,0,-70);
   box(40,60,140);
-  translate(0,0,-130);
-  //rotateX(radians(-middleFingerDeg));
+  translate(0,0,-70);
+  rotateX(radians(middleFingerDeg));
+  translate(0,0,-60);
   box(40,60,120);
-  //rotateX(radians(middleFingerDeg));
-  translate(0,0,130);
-  translate(50,0,140);
-  //rotateX(radians(middleKnuckleDeg));
+  translate(0,0,60);
+  rotateX(radians(-middleFingerDeg));
+  translate(0,0,70);
+  translate(0,0,70);
+  rotateX(radians(-middleKnuckleDeg));
+  translate(50,0,70);
   
   // ring finger
-  translate(0,0,-130);
-  rotateX(radians(ringKnuckleDeg)); 
+  translate(0,0,-70);
+  rotateX(radians(ringKnuckleDeg));
+  translate(0,0,-60);
   box(40,60,120);
   translate(0,0,-60);
   rotateX(radians(ringFingerDeg));
@@ -212,18 +221,21 @@ void drawHand() {
   translate(0,0,50);
   rotateX(radians(-ringFingerDeg));
   translate(0,0,60);
+  translate(0,0,60);
   rotateX(radians(-ringKnuckleDeg));
-  translate(50,0,130);
+  translate(50,0,70);
   
   // pinkie finger
   translate(0,0,-110);
   box(40,60,80);
-  translate(0,0,-75);
-  //rotateX(radians(-pinkieFingerDeg));
+  translate(0,0,-40);
+  rotateX(radians(pinkieFingerDeg));
+  translate(0,0,-35);
   box(40,60,70);
-  //rotateX(radians(pinkieFingerDeg));
+  translate(0,0,35);
+  rotateX(radians(-pinkieFingerDeg));
 }
 
 void calibrate_hand() {
-  // use QUATERNIONS!
+  // use rotation matrices!
 }
