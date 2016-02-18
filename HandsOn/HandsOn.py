@@ -103,7 +103,7 @@ def parseSerialHandData(ser):
         
     while True: 
         line = ser.readline() #Read line until \n 
-        print line      
+        print(line)
         lineList = line.split()
         if len(lineList) > 1:
             #print(lineList) # Testing Purposes
@@ -130,9 +130,9 @@ def parseSerialHandData(ser):
                 share_var.indexKnuckleDeg = float(lineList[1])
                 share_var.middleKnuckleDeg = float(lineList[3])
                 share_var.ringKnuckleDeg = float(lineList[5])
-
-            # Update the collection of flex sensor data
-            UpdateFlexCollectData()
+                share_var.thumbDeg = float(lineList[7])
+                # Update the collection of flex sensor data
+                UpdateFlexCollectData()
             
             # Quaternions
             elif lineList[0] == "qW:":
