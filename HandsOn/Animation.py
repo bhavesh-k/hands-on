@@ -10,8 +10,7 @@ import threading
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import glTranslatef
-from direct.leveleditor.AnimGlobals import FRAME
-
+#from direct.leveleditor.AnimGlobals import FRAME
 #global pitch, yaw, roll
 
 ## Draw the 3D hand based on parsed serial data
@@ -91,11 +90,15 @@ def main():
     glRotatef(0, 0, 0, 0)
     
     # Open serial port and parse serial input inside a thread
-    ser = serial.Serial('/dev/ttyACM0', 9600)
+    ser = serial.Serial('COM3', 9600) # Bhavit's PORT
+    #ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
     serialThread = threading.Thread(target=HandsOn.parseSerialHandData, args=(ser,))
     serialThread.setDaemon(True)
     serialThread.start()
-    
+
+    pseudoMainThread = threading.Thread(target=HandsOn.pseudoMain)
+    pseudoMainThread.setDaemon(True)
+    pseudoMainThread.start()
     curr_pitch = curr_yaw = curr_roll = 0.0 # initialize
     
     while True:
