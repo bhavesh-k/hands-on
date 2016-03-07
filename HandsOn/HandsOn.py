@@ -2,10 +2,13 @@ import math
 import string
 import time
 import serial
-import collections
 import share_var
 import numpy as np
 from sklearn import svm
+import pyttsx
+
+# Instantiate a pysttsx engine object
+engine = pyttsx.init()
 
 #global pitch, yaw, roll
 
@@ -154,14 +157,16 @@ def readHandDataFromFile(fileName):
         Stores the identifier in numpy array "signTarget"
         Stores the hand data in numpy array "signFeatures"
         Inputs:     fileName - specificy entire filename with extension (ie. 'test.csv')
-        Outputs:    signTarget - 1xn array of targets/identifiers/labels
+        Outputs:    signTarget - nx1 array of targets/identifiers/labels
                     signFeatures - nxm array of m features for each of the n targets
     """ 
     inFile = open(fileName,'r')
     fileList = inFile.readlines() #Each line is an item in the list
-    n = len(inFile.readlines()) #Number of tagets from lines in file
+    # print (fileList) #For testing
+    n = len(fileList) #Number of tagets from lines in file
     m = len(fileList[0].split(','))-1 #Number features
-    signTarget = np.zeros((1,n))
+    # print ('n,m=',n,m) #For testing
+    signTarget = np.empty((n),dtype='a16') #Empty nx1 array of 16 char max strings
     signFeatures = np.zeros((n,m))
     for i in range(0,n):
         lineList = fileList[i].split(',') # Splits line by ','
@@ -171,16 +176,17 @@ def readHandDataFromFile(fileName):
                 signTarget[i]= item
                 j+=1
             else:
-                signFeatures[i,j] = item
+                signFeatures[i,j-1] = item
                 j+=1
-    return( signTarget, signFeatures)
+    inFile.close
+    return( signTarget, signFeatures )
 ## end of readHandDataFromFile
     
 ## Capture hand data or predict function
 def pseudoMain():
-    print("-------------------------------------")
-    print("             HandsOn                 ")
-    print("-------------------------------------")
+    print("--------------------------------------------------")
+    print("                     HandsOn                      ")
+    print("--------------------------------------------------")
     print("MENU:")
     print("1. Capture Hand Gesture Data to File")
     print("2. Train SVM with Hand Gesture Data From File")
@@ -193,20 +199,23 @@ def pseudoMain():
     while True:
         modeEnable = input("Enter the number corresponding to the menu option to perform: ")
         if modeEnable == 1:
+            inFileName = raw_input("Enter the full file name with correct extension: ")
             # Capture hand gesture data to file
             while True:
                 gestureID = raw_input("Enter the identifier for the hand letter/number/gesture: ") # Ask for gesture identifier
                 if gestureID == "\exit": ## Type \exit to exit the loop
                     break
                 else:
-                   printHandDataToFile("classification.csv",gestureID)
+                   printHandDataToFile(inFileName,gestureID)
         elif modeEnable == 2:
             # Train SVM with Hand Gesture Data From File
             inFileName = raw_input("Enter the full file name with correct extension: ")
             signTarget, signFeatures = readHandDataFromFile(inFileName)
+            #print "Signed Target:", signTarget
+            #print "Signed Features:", signFeatures
             # Instantiate the SVM object
             print("Creating the SVM and fitting the data...")
-            clf = svm.SVC(C=100, kernal='rbf',gamma=0.001,probability=True) ## NEED TO OPTIMIZE THE PARAMETERS
+            clf = svm.SVC(C=100, kernel='rbf',gamma=0.001,probability=True) ## NEED TO OPTIMIZE THE PARAMETERS
             clf.fit(signFeatures,signTarget)
             svmFlag = True
             print("SVM Fit Completed\n")
@@ -222,12 +231,15 @@ def pseudoMain():
                 try:
                     while True:   
                         print("SVM is predicting hand gestures...")
-                        #time.sleep(0.5)
-                        svmPred = clf.predict(FlexDataList.reshape(1,-1))
-                        print("Prediction: ", svmPred)
+                        time.sleep(2)
+                        gest = np.asarray(FlexDataList())
+                        svmPred = clf.predict(gest.reshape(1,-1))
+                        print "Prediction: ", svmPred 
                         ## DO PROBABILITY STUFF IF REQUIRED
-                        svmPredProb = clf.predict_proba(FlexDataList.reshape(1,-1))
-                        print("Probability Prediction: ", svmPredProb)
+                        svmPredProb = clf.predict_proba(gest.reshape(1,-1))
+                        print "Probability Prediction: ", svmPredProb
+                        engine.say(svmPred[0])
+                        engine.runAndWait()
                 except KeyboardInterrupt:
                     pass             
         elif modeEnable == 5:
