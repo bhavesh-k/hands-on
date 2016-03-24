@@ -233,8 +233,8 @@ void loop(void)
   int flexDegrees[9];
   int flexDegCal[9][2];
   int flexPinMap[9];
-  /* Mapping to Analog pins on teensy 
-    from flexPinMap[0] to flexPinMap[7]
+  /* Mapping to Analog pins on teensy
+    from flexPinMap[0] to flexPinMap[8]
     Index, IndexKnuckle, Middle, MiddleKnuckle
     Ring, Ring Knuckle, Pinky, Thumb, Thumb Knuckle
   */
@@ -281,12 +281,12 @@ void loop(void)
   Serial.print(F(" "));
   Serial.print("Thumb: ");
   Serial.print(flexDegrees[3],DEC);
-  Serial.println(F(""));
+  Serial.print(F(" "));
   Serial.print("ThumbKnuckle: ");
   Serial.print(flexDegrees[4],DEC);
   Serial.println(F(""));
 
-//  Serial.println("FlexSensorBending(degrees)");
+//  Serial.println("FlexSensorBending(raw)");
 //  Serial.print("   Index: ");
 //  Serial.print(flexRaw[7],DEC);
 //  Serial.print(F(" "));
@@ -309,10 +309,47 @@ void loop(void)
 //  Serial.print(F(""));
 //  Serial.print("Thumb: ");
 //  Serial.print(flexRaw[3],DEC);
-//  Serial.println(F(""));
+//  Serial.print(F(" "));
 //  Serial.print("ThumbKnuckle: ");
 //  Serial.print(flexRaw[4],DEC);
 //  Serial.println(F(""));
+
+  /*Capacitive touch sensors*/
+  int touchRaw[7];
+  int touchPinMap[7];
+
+  /*Mapping to touch pins on Teensy in this order:
+   * IndexSide, IndexTop, MiddleTop, MiddleSide,
+   * RingSide, PinkySide, PinkyTop
+   */
+  touchPinMap[0] = 0; touchPinMap[1] = 1; touchPinMap[2] = 23; touchPinMap[3] = 22;
+  touchPinMap[4] = 17; touchPinMap[5] = 16; touchPinMap[6] = 15;
+
+  for (int i = 0; i < 7; i++){
+    touchRaw[i] = touchRead(touchPinMap[i]);
+  }
+
+  Serial.println("TouchSensors");
+  Serial.print(" IndexSide: ");
+  Serial.print(touchRaw[0],DEC);
+  Serial.print(F(" "));
+  Serial.print("IndexTop: ");
+  Serial.print(touchRaw[1],DEC);
+  Serial.print(F(" "));
+  Serial.print("MiddleTop: ");
+  Serial.print(touchRaw[2],DEC);
+  Serial.print(F(" "));
+  Serial.print("MiddleSide: ");
+  Serial.println(touchRaw[3],DEC);
+  Serial.print("   RingSide: ");
+  Serial.print(touchRaw[4],DEC);
+  Serial.print(F(" "));
+  Serial.print("PinkySide: ");
+  Serial.print(touchRaw[5],DEC);
+  Serial.print(F(" "));
+  Serial.print("PinkyTop: ");
+  Serial.print(touchRaw[6],DEC);
+  Serial.println(F(""));
   
   delay(BNO055_SAMPLERATE_DELAY_MS);
 }
