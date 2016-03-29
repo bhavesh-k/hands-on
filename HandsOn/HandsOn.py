@@ -16,6 +16,7 @@ import share_var
 import numpy as np
 from sklearn import svm
 import pyttsx
+import collections
 
 
 def QuatToEuler(q0, q1, q2, q3):
@@ -220,7 +221,7 @@ def printHandDataToFile(fileName, str_handIdentifier):
         Inputs:     fileName - specify entire filename with extension (ie. 'test.csv')
         Outputs:    writes to file
     """
-    outFile = open(fileName,'a')
+    outFile = open(fileName,'a') # append mode
     # Obtain hand data as strings separated by "," from XDataStr() so that we can write to file
     strHandDataOut = str_handIdentifier + "," + FlexDataStr() + ',' + TouchBoolStr() + ',' + QuatDataStr()
     outFile.write(strHandDataOut)
@@ -381,14 +382,14 @@ def parseSerialHandData(ser):
                 share_var.thumbKnuckleDeg = float(lineList[9])
             
             # Touch Sensors Part 1
-            elif lineList[0] == "IndexSide:":
+            elif lineList[0] == "   IndexSide:":
                 share_var.touch1 = float(lineList[1])
                 share_var.touch2 = float(lineList[3])
                 share_var.touch3 = float(lineList[5])
                 share_var.touch4 = float(lineList[7])
 
             # Touch Sensors Part 2
-            elif lineList[0] == "RingSide:":
+            elif lineList[0] == "   RingSide:":
                 share_var.touch5 = float(lineList[1])
                 share_var.touch6 = float(lineList[3])
                 share_var.touch7 = float(lineList[5])

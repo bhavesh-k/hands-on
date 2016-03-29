@@ -58,13 +58,18 @@ def drawBox(width,height,depth):
 
     glEnd()
 
-def drawHand(curr_pitch,curr_yaw,curr_roll):
+def drawHand():
     # draw the 3D hand
-    
-    # rotate by pitch, yaw and roll
-    glRotatef(share_var.pitch - curr_pitch, 1, 0, 0)
-    glRotatef(share_var.yaw - curr_yaw, 0, 1, 0)
-    glRotatef(share_var.roll - curr_roll, 0, 0, 1)
+
+    # clear previous rotations and reset scene
+    glLoadIdentity()
+    gluPerspective(90, 1, 1.0, 50.0)
+    glTranslatef(0.0, 0.0, -4) # move cube away from screen (zoom out)
+
+    # rotate using Euler angles
+    glRotatef(share_var.pitch, 1, 0, 0)
+    glRotatef(share_var.yaw, 0, 1, 0)
+    glRotatef(share_var.roll, 0, 0, 1)
     
     # draw the palm
     drawBox(3,1,2.2)
@@ -100,8 +105,8 @@ def main():
     glRotatef(0, 0, 0, 0)
     
     # Open serial port and parse serial input inside a thread
-    ser = serial.Serial('COM3', 9600) # Bhavit's PORT
-    #ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
+    #ser = serial.Serial('COM3', 9600) # Bhavit's PORT
+    ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
     serialThread = threading.Thread(target=HandsOn.parseSerialHandData, args=(ser,))
     serialThread.setDaemon(True)
     serialThread.start()
@@ -109,7 +114,6 @@ def main():
     pseudoMainThread = threading.Thread(target=HandsOn.pseudoMain)
     pseudoMainThread.setDaemon(True)
     pseudoMainThread.start()
-    curr_pitch = curr_yaw = curr_roll = 0.0 # initialize
     
     while True:
         for event in pygame.event.get():
@@ -122,7 +126,7 @@ def main():
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
         
         # draw 3D hand and also update the pitch, yaw and roll
-        curr_pitch,curr_yaw,curr_roll = drawHand(curr_pitch,curr_yaw,curr_roll)
+        drawHand()
         
         # refresh the frame
         pygame.display.flip()

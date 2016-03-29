@@ -52,8 +52,8 @@ def main():
 ##    HandsOn.pseudoMain()
 
     # Open serial port and parse serial input inside a thread
-    ser = serial.Serial('COM3', 9600) # Bhavit's PORT
-    #ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
+    #ser = serial.Serial('COM3', 9600) # Bhavit's PORT
+    ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
     serialThread = threading.Thread(target=HandsOn.parseSerialHandData, args=(ser,))
     serialThread.setDaemon(True)
     serialThread.start()
