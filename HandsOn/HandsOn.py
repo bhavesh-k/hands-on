@@ -295,7 +295,7 @@ def pseudoMain():
             #print "Signed Features:", signFeatures
             # Instantiate the SVM object
             print("Creating the SVM and fitting the data...")
-            clf = svm.SVC(C=100, kernel='rbf',gamma=0.001,probability=True) ## NEED TO OPTIMIZE THE PARAMETERS
+            clf = svm.SVC(C=1, kernel='rbf',gamma=0.0001,probability=True) ## NEED TO OPTIMIZE THE PARAMETERS
             clf.fit(signFeatures,signTarget)
             svmFlag = True
             print("SVM Fit Completed\n")
@@ -311,16 +311,16 @@ def pseudoMain():
                 try:
                     while True:   
                         print("SVM is predicting hand gestures...")
-                        time.sleep(2) # Wait time between classifications                   
-                        kernal_svm_time = time() #Timing how long SVM takes to classify
-                        gest = np.asarray(FlexDataList()+TouchBoolList()+QuatDataList()) #avg of last 2 seconds
+                        time.sleep(4) # Wait time between classifications                   
+                        #kernal_svm_time = time() #Timing how long SVM takes to classify
+                        gest = np.asarray(FlexDataList()+TouchBoolList()) #+QuatDataList()) #avg of last 2 seconds
                         svmPred = clf.predict(gest.reshape(1,-1))
                         print "Prediction: ", svmPred 
                         ## DO PROBABILITY STUFF IF REQUIRED
                         svmPredProb = clf.predict_proba(gest.reshape(1,-1))
                         print "Probability Prediction: ", svmPredProb
-                        kernal_svm_time = kernal_svm_time - time()
-                        print "Time to predict: ", kernal_svm_time
+                        #kernal_svm_time = kernal_svm_time - time()
+                        #print "Time to predict: ", kernal_svm_time
               
                         # Text to speech of output
                         engine.say(svmPred[0])

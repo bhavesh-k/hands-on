@@ -243,15 +243,15 @@ void loop(void)
   flexPinMap[8] = 36;
 
   // Calibrated mapping from analog values to degrees for each joint
-  flexDegCal[0][0] = 462; flexDegCal[0][1] = 715;
-  flexDegCal[1][0] = 527; flexDegCal[1][1] = 750;
-  flexDegCal[2][0] = 479; flexDegCal[2][1] = 735;
-  flexDegCal[3][0] = 467; flexDegCal[3][1] = 700;
-  flexDegCal[4][0] = 510; flexDegCal[4][1] = 735;
-  flexDegCal[5][0] = 499; flexDegCal[5][1] = 755;
-  flexDegCal[6][0] = 507; flexDegCal[6][1] = 688;
-  flexDegCal[7][0] = 473; flexDegCal[7][1] = 700;
-  flexDegCal[8][0] = 478; flexDegCal[8][1] = 750;
+  flexDegCal[0][0] = 480; flexDegCal[0][1] = 657; // Middle Knuckle
+  flexDegCal[1][0] = 565; flexDegCal[1][1] = 670; // Pinky
+  flexDegCal[2][0] = 515; flexDegCal[2][1] = 665; // Ring Knuckle
+  flexDegCal[3][0] = 488; flexDegCal[3][1] = 555; // Thumb Knuckle
+  flexDegCal[4][0] = 550; flexDegCal[4][1] = 650; // Thumb
+  flexDegCal[5][0] = 542; flexDegCal[5][1] = 705; // Index Knuckle
+  flexDegCal[6][0] = 528; flexDegCal[6][1] = 665; // Middle
+  flexDegCal[7][0] = 499; flexDegCal[7][1] = 650; // Index
+  flexDegCal[8][0] = 498; flexDegCal[8][1] = 737; // Ring
   
   for (int i = 0; i < 9; i++){
     flexRaw[i] = analogRead(flexPinMap[i]);
@@ -280,10 +280,10 @@ void loop(void)
   Serial.print(flexDegrees[2],DEC);
   Serial.print(F(" "));
   Serial.print("Thumb: ");
-  Serial.print(flexDegrees[3],DEC);
+  Serial.print(flexDegrees[4],DEC);
   Serial.print(F(" "));
   Serial.print("ThumbKnuckle: ");
-  Serial.print(flexDegrees[4],DEC);
+  Serial.print(flexDegrees[3],DEC);
   Serial.println(F(""));
 
 //  Serial.println("FlexSensorBending(raw)");
@@ -308,10 +308,10 @@ void loop(void)
 //  Serial.println(flexRaw[2],DEC);
 //  Serial.print(F(""));
 //  Serial.print("Thumb: ");
-//  Serial.print(flexRaw[3],DEC);
+//  Serial.print(flexRaw[4],DEC);
 //  Serial.print(F(" "));
 //  Serial.print("ThumbKnuckle: ");
-//  Serial.print(flexRaw[4],DEC);
+//  Serial.print(flexRaw[3],DEC);
 //  Serial.println(F(""));
 
   /*Capacitive touch sensors*/
@@ -322,15 +322,15 @@ void loop(void)
    * IndexSide, IndexTop, MiddleTop, MiddleSide,
    * RingSide, PinkySide, PinkyTop
    */
-  touchPinMap[0] = 0; touchPinMap[1] = 1; touchPinMap[2] = 23; touchPinMap[3] = 22;
-  touchPinMap[4] = 17; touchPinMap[5] = 16; touchPinMap[6] = 15;
+  touchPinMap[0] = 15; touchPinMap[1] = 16; touchPinMap[2] = 17; touchPinMap[3] = 23;
+  touchPinMap[4] = 22; touchPinMap[5] = 0; touchPinMap[6] = 1;
 
   for (int i = 0; i < 7; i++){
     touchRaw[i] = touchRead(touchPinMap[i]);
   }
 
   Serial.println("TouchSensors");
-  Serial.print(" IndexSide: ");
+  Serial.print("   IndexSide: ");
   Serial.print(touchRaw[0],DEC);
   Serial.print(F(" "));
   Serial.print("IndexTop: ");

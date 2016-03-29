@@ -20,8 +20,8 @@ def optimize_SVC_parameters():
     print(__doc__)
 
     # Loading the training and cross-validation data
-    trainingDataFile = 'trainingSigns.csv' # Training data
-    cvDataFile = 'crossValidationSigns.csv' # Cross-validation data
+    trainingDataFile = 'initialTraining2_noquat.csv' # Training data
+    cvDataFile = 'cvInitial2_noquat.csv' # Cross-validation data
     signTarget_train, signFeatures_train = HandsOn.readHandDataFromFile(trainingDataFile)
     signTarget_test, signFeatures_test = HandsOn.readHandDataFromFile(cvDataFile)
 
@@ -51,7 +51,7 @@ def optimize_SVC_parameters():
         print("The model is trained on the full development set.\n")
         print("The scores are computed on the full evaluation set.\n")
         signTarget_true, signTarget_pred = signTarget_test, clf.predict(signFeatures_test)
-        print(classification_report(gest_true, gest_pred))
+        print(classification_report(signTarget_true, signTarget_pred))
         print ""
     return 0
 ## end of optimzeSVM
