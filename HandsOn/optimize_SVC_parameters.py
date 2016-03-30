@@ -20,8 +20,8 @@ def optimize_SVC_parameters():
     print(__doc__)
 
     # Loading the training and cross-validation data
-    trainingDataFile = 'initialTraining2_noquat.csv' # Training data
-    cvDataFile = 'cvInitial2_noquat.csv' # Cross-validation data
+    trainingDataFile = 'fifteen_letters_noquat.csv' # Training data
+    cvDataFile = 'fifteen_letters_noquat.csv' # Cross-validation data
     signTarget_train, signFeatures_train = HandsOn.readHandDataFromFile(trainingDataFile)
     signTarget_test, signFeatures_test = HandsOn.readHandDataFromFile(cvDataFile)
 
@@ -33,7 +33,7 @@ def optimize_SVC_parameters():
     scores = ['precision', 'recall']
 
     for score in scores:
-        print("# Tuning hyper-parameters for %s \n" % score) 
+        print("# Tuning hyper-parameters for %s \n" % score)
 
         clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5,
                            scoring='%s_weighted' % score)
@@ -54,4 +54,4 @@ def optimize_SVC_parameters():
         print(classification_report(signTarget_true, signTarget_pred))
         print ""
     return 0
-## end of optimzeSVM
+## end of optimizeSVM

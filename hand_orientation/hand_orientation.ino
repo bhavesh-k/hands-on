@@ -283,8 +283,7 @@ void loop(void)
   Serial.print(flexDegrees[4],DEC);
   Serial.print(F(" "));
   Serial.print("ThumbKnuckle: ");
-  Serial.print(flexDegrees[3],DEC);
-  Serial.println(F(""));
+  Serial.println(flexDegrees[3],DEC);
 
 //  Serial.println("FlexSensorBending(raw)");
 //  Serial.print("   Index: ");
@@ -311,8 +310,7 @@ void loop(void)
 //  Serial.print(flexRaw[4],DEC);
 //  Serial.print(F(" "));
 //  Serial.print("ThumbKnuckle: ");
-//  Serial.print(flexRaw[3],DEC);
-//  Serial.println(F(""));
+//  Serial.println(flexRaw[3],DEC);
 
   /*Capacitive touch sensors*/
   int touchRaw[7];
@@ -330,7 +328,7 @@ void loop(void)
   }
 
   Serial.println("TouchSensors");
-  Serial.print("   IndexSide: ");
+  Serial.print("IndexSide: ");
   Serial.print(touchRaw[0],DEC);
   Serial.print(F(" "));
   Serial.print("IndexTop: ");
@@ -341,15 +339,14 @@ void loop(void)
   Serial.print(F(" "));
   Serial.print("MiddleSide: ");
   Serial.println(touchRaw[3],DEC);
-  Serial.print("   RingSide: ");
+  Serial.print("RingSide: ");
   Serial.print(touchRaw[4],DEC);
   Serial.print(F(" "));
   Serial.print("PinkySide: ");
   Serial.print(touchRaw[5],DEC);
   Serial.print(F(" "));
   Serial.print("PinkyTop: ");
-  Serial.print(touchRaw[6],DEC);
-  Serial.println(F(""));
+  Serial.println(touchRaw[6],DEC);
   
   delay(BNO055_SAMPLERATE_DELAY_MS);
 }

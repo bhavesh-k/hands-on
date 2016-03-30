@@ -5,7 +5,7 @@ Date Created: January 2016
 Version 1
 
 Contains multiple modules and functions for processing data from serial output
-Also contains pseudoMain() which is a console application to save gesture data to file, 
+Also contains pseudoMain() which is a console application to save gesture data to file,
 train SVM from data in a file, and classify gestures in real time (also with text-to-speech output).
 """
 import math
@@ -16,7 +16,6 @@ import share_var
 import numpy as np
 from sklearn import svm
 import pyttsx
-import collections
 
 
 def QuatToEuler(q0, q1, q2, q3):
@@ -55,18 +54,18 @@ def UpdateDequeData():
     share_var.touch6Collect.append(share_var.touch6)
     share_var.touch7Collect.append(share_var.touch7)
     # Quaternions
-    share_var.q0Collect.append(share_var.q0) 
-    share_var.q1Collect.append(share_var.q1) 
-    share_var.q2Collect.append(share_var.q2) 
-    share_var.q3Collect.append(share_var.q3) 
+    share_var.q0Collect.append(share_var.q0)
+    share_var.q1Collect.append(share_var.q1)
+    share_var.q2Collect.append(share_var.q2)
+    share_var.q3Collect.append(share_var.q3)
     # Euler Angles
-    share_var.rollCollect.append(share_var.roll) 
-    share_var.pitchCollect.append(share_var.pitch) 
-    share_var.yawCollect.append(share_var.yaw) 
+    share_var.rollCollect.append(share_var.roll)
+    share_var.pitchCollect.append(share_var.pitch)
+    share_var.yawCollect.append(share_var.yaw)
     # Linear Acceleration
-    share_var.xAccCollect.append(share_var.xAcc) 
-    share_var.yAccCollect.append(share_var.yAcc) 
-    share_var.zAccCollect.append(share_var.zAcc) 
+    share_var.xAccCollect.append(share_var.xAcc)
+    share_var.yAccCollect.append(share_var.yAcc)
+    share_var.zAccCollect.append(share_var.zAcc)
 ## end of UpdateDequeData
 
 def dequeMean(deq):
@@ -183,26 +182,26 @@ def QuatDataStr():
 
 def QuatCurrDataStr():
     """ Returns the current Quaternion Data values in the form of a string separated by ","s """
-    tmpList = [ share_var.q0, share_var.q1, share_var.q2, share_var.q3 ] 
+    tmpList = [ share_var.q0, share_var.q1, share_var.q2, share_var.q3 ]
     return( ','.join(repr(e) for e in tmpList) )
 ## end of QuatCurrDataStr()
 
 def EulerCurrDataStr():
     """ Returns the current Euler Data values in the form of a string separated by ","s """
-    tmpList = [ share_var.roll, share_var.pitch, share_var.yaw] 
+    tmpList = [ share_var.roll, share_var.pitch, share_var.yaw]
     return( ','.join(repr(e) for e in tmpList) )
 ## end of EulerCurrDataStr()
 
 def LinAccelCurrDataStr():
     """ Returns the current Linear Acceleration values in the form of a string separated by ","s """
-    tmpList = [ share_var.xAcc, share_var.yAcc, share_var.zAcc ] 
+    tmpList = [ share_var.xAcc, share_var.yAcc, share_var.zAcc ]
     return( ','.join(repr(e) for e in tmpList) )
 ## end of LinAccelCurrDataStr()
 
 ## printInstHandDataToFile
 def printInstHandDataToFile(fileName, str_handIdentifier):
-    """ Inputs a letter/number/gesture identifying the hand animation being performed  
-        Writes the identifier with the instantaneuous hand data to a file 
+    """ Inputs a letter/number/gesture identifying the hand animation being performed
+        Writes the identifier with the instantaneuous hand data to a file
         Inputs:     fileName - specify entire filename with extension (ie. 'test.csv')
         Outputs:    writes to file
     """
@@ -211,12 +210,12 @@ def printInstHandDataToFile(fileName, str_handIdentifier):
     strHandDataOut = str_handIdentifier + "," + FlexDataStr() + "," + QuatDataStr() + "," + EulerDataStr() + "," + LinAccelDataStr()
     outFile.write(strHandDataOut)
     outFile.write('\n')
-    outFile.close  
+    outFile.close
 ## end of printInstHandDataToFile
 
 ## printHandDataToFile
 def printHandDataToFile(fileName, str_handIdentifier):
-    """ Inputs a letter/number/gesture identifying the hand animation being performed  
+    """ Inputs a letter/number/gesture identifying the hand animation being performed
         Writes the identifier with the appropriate hand data to the file specified
         Inputs:     fileName - specify entire filename with extension (ie. 'test.csv')
         Outputs:    writes to file
@@ -226,7 +225,7 @@ def printHandDataToFile(fileName, str_handIdentifier):
     strHandDataOut = str_handIdentifier + "," + FlexDataStr() + ',' + TouchBoolStr() + ',' + QuatDataStr()
     outFile.write(strHandDataOut)
     outFile.write('\n')
-    outFile.close  
+    outFile.close
 ## end of printHandDataToFile
 
 def readHandDataFromFile(fileName):
@@ -236,7 +235,7 @@ def readHandDataFromFile(fileName):
         Inputs:     fileName - specify entire filename with extension (ie. 'test.csv')
         Outputs:    signTarget - nx1 array of targets/identifiers/labels
                     signFeatures - nxm array of m features for each of the n targets
-    """ 
+    """
     inFile = open(fileName,'r')
     fileList = inFile.readlines() #Each line is an item in the list
     # print (fileList) #For testing
@@ -258,10 +257,10 @@ def readHandDataFromFile(fileName):
     inFile.close
     return( signTarget, signFeatures )
 ## end of readHandDataFromFile
-    
+
 ## Capture hand data or predict function
 def pseudoMain():
-    """ Console menu application for capturing hand gestures, training SVM, and classifying gestures """ 
+    """ Console menu application for capturing hand gestures, training SVM, and classifying gestures """
     print("--------------------------------------------------")
     print("                     HandsOn                      ")
     print("--------------------------------------------------")
@@ -271,12 +270,12 @@ def pseudoMain():
     print("3. Load SVM from File")
     print("4. Predict Hand Gestures")
     print("5. Exit\n")
-    
+
     # Instantiate the text-to-speech engine
     engine = pyttsx.init()
 
     svmFlag = False #Flag to determine if the SVM has been instantiated and fit
-    
+
     while True:
         modeEnable = input("Enter the number corresponding to the menu option to perform: ")
         if modeEnable == 1:
@@ -310,24 +309,24 @@ def pseudoMain():
             else:
                 # Ctrl-C causes keyboard interrupt and allows us to exit back to the menu with try and except
                 try:
-                    while True:   
+                    while True:
                         print("SVM is predicting hand gestures...")
-                        time.sleep(4) # Wait time between classifications                   
+                        time.sleep(4) # Wait time between classifications
                         #kernal_svm_time = time() #Timing how long SVM takes to classify
-                        gest = np.asarray(FlexDataList()+TouchBoolList()) #+QuatDataList()) #avg of last 2 seconds
+                        gest = np.asarray(FlexDataList()+TouchBoolList()+QuatDataList()) #avg of last 2 seconds
                         svmPred = clf.predict(gest.reshape(1,-1))
-                        print "Prediction: ", svmPred 
+                        print "Prediction: ", svmPred
                         ## DO PROBABILITY STUFF IF REQUIRED
                         svmPredProb = clf.predict_proba(gest.reshape(1,-1))
                         print "Probability Prediction: ", svmPredProb
                         #kernal_svm_time = kernal_svm_time - time()
                         #print "Time to predict: ", kernal_svm_time
-              
+
                         # Text to speech of output
                         engine.say(svmPred[0])
                         engine.runAndWait()
                 except KeyboardInterrupt:
-                    pass             
+                    pass
         elif modeEnable == 5:
             print("Exiting...\n")
             break # Exit while loop and terminate
@@ -346,11 +345,11 @@ def pseudoMain():
 #         self.daemon = True
 #         ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5) #Open serial port
 #         self.start()
-        
+
 def parseSerialHandData(ser):
     """ Parses serial data and assigns to appropriate global variables """
-    while True: 
-        line = ser.readline() #Read line until \n 
+    while True:
+        line = ser.readline() #Read line until \n
         #print(line)
         lineList = line.split()
         if len(lineList) > 1:
@@ -365,14 +364,14 @@ def parseSerialHandData(ser):
                 share_var.gyroCal  = int(lineList[3])
                 share_var.accelCal = int(lineList[5])
                 share_var.magCal   = int(lineList[7])
-    
+
             # Fingers Part 1
             elif lineList[0] == "Index:":
                 share_var.indexFingerDeg = float(lineList[1])
                 share_var.middleFingerDeg = float(lineList[3])
                 share_var.ringFingerDeg = float(lineList[5])
                 share_var.pinkieFingerDeg = float(lineList[7])
-    
+
             # Fingers Part 2
             elif lineList[0] == "IndexKnuckle:":
                 share_var.indexKnuckleDeg = float(lineList[1])
@@ -380,19 +379,19 @@ def parseSerialHandData(ser):
                 share_var.ringKnuckleDeg = float(lineList[5])
                 share_var.thumbDeg = float(lineList[7])
                 share_var.thumbKnuckleDeg = float(lineList[9])
-            
+
             # Touch Sensors Part 1
-            elif lineList[0] == "   IndexSide:":
-                share_var.touch1 = float(lineList[1])
-                share_var.touch2 = float(lineList[3])
-                share_var.touch3 = float(lineList[5])
-                share_var.touch4 = float(lineList[7])
+            elif lineList[0] == "IndexSide:":
+                share_var.touch1 = int(lineList[1])
+                share_var.touch2 = int(lineList[3])
+                share_var.touch3 = int(lineList[5])
+                share_var.touch4 = int(lineList[7])
 
             # Touch Sensors Part 2
-            elif lineList[0] == "   RingSide:":
-                share_var.touch5 = float(lineList[1])
-                share_var.touch6 = float(lineList[3])
-                share_var.touch7 = float(lineList[5])
+            elif lineList[0] == "RingSide:":
+                share_var.touch5 = int(lineList[1])
+                share_var.touch6 = int(lineList[3])
+                share_var.touch7 = int(lineList[5])
                 # This line is the last one of the current serial data block so...
                 # Update the moving window deque structure with new sensor values
                 UpdateDequeData()
@@ -407,10 +406,11 @@ def parseSerialHandData(ser):
                 share_var.pitch = -math.degrees(p)
                 share_var.roll = -math.degrees(r)
                 share_var.yaw = math.degrees(y)
-    
+
             #Linear Acceleration
             elif lineList[0] == "aX:":
                 share_var.xAcc = float(lineList[1])
                 share_var.yAcc = float(lineList[3])
                 share_var.zAcc = float(lineList[5])
+
 ## end of parseSerialHandData
