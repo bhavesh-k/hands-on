@@ -15,6 +15,7 @@ import serial
 import share_var
 import numpy as np
 from sklearn import svm
+from sklearn import tree
 import pyttsx
 
 
@@ -140,7 +141,7 @@ def TouchDataStr():
 def TouchBoolList():
     """ Returns a boolean int (0 or 1) from average of stored Touch Sensor Data in the form of a list """
     # Threshold value for indicated the fingers have touched
-    touchThres = 4000;
+    touchThres = 2000;
     # Determine average of touch sensor data in collection data and use threshold for boolean (touched or not touched)
     touch1_bool = 1 if (dequeMean(share_var.touch1Collect) > touchThres) else 0
     touch2_bool = 1 if (dequeMean(share_var.touch2Collect) > touchThres) else 0
@@ -279,14 +280,14 @@ def pseudoMain():
     while True:
         modeEnable = input("Enter the number corresponding to the menu option to perform: ")
         if modeEnable == 1:
-            inFileName = raw_input("Enter the full file name with correct extension: ")
+            outFileName = raw_input("Enter the full file name with correct extension: ")
             # Capture hand gesture data to file
             while True:
                 gestureID = raw_input("Enter the identifier for the hand letter/number/gesture: ") # Ask for gesture identifier
                 if gestureID == "\exit": ## Type \exit to exit the loop
                     break
                 else:
-                   printHandDataToFile(inFileName,gestureID)
+                   printHandDataToFile(outFileName,gestureID)
         elif modeEnable == 2:
             # Train SVM with Hand Gesture Data From File
             inFileName = raw_input("Enter the full file name with correct extension: ")
@@ -296,7 +297,11 @@ def pseudoMain():
             # Instantiate the SVM object
             print("Creating the SVM and fitting the data...")
             clf = svm.SVC(C=1, kernel='rbf',gamma=0.0001,probability=True) ## NEED TO OPTIMIZE THE PARAMETERS
+            clf_tree = tree.DecisionTreeClassifier() # decision tree version of classifier
+
             clf.fit(signFeatures,signTarget)
+            clf_tree.fit(signFeatures,signTarget)
+
             svmFlag = True
             print("SVM Fit Completed\n")
         elif modeEnable == 3:
@@ -314,10 +319,10 @@ def pseudoMain():
                         time.sleep(4) # Wait time between classifications
                         #kernal_svm_time = time() #Timing how long SVM takes to classify
                         gest = np.asarray(FlexDataList()+TouchBoolList()+QuatDataList()) #avg of last 2 seconds
-                        svmPred = clf.predict(gest.reshape(1,-1))
+                        svmPred = clf.predict(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
                         print "Prediction: ", svmPred
                         ## DO PROBABILITY STUFF IF REQUIRED
-                        svmPredProb = clf.predict_proba(gest.reshape(1,-1))
+                        svmPredProb = clf.predict_proba(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
                         print "Probability Prediction: ", svmPredProb
                         #kernal_svm_time = kernal_svm_time - time()
                         #print "Time to predict: ", kernal_svm_time
