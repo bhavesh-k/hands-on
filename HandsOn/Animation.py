@@ -20,11 +20,10 @@ import threading
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.raw.GL.VERSION.GL_1_0 import glTranslatef
-#from direct.leveleditor.AnimGlobals import FRAME
-#global pitch, yaw, roll
 
-## Draw the 3D hand based on parsed serial data
 def drawBox(width,height,depth):
+    """Draw a 3D box using provided width, height and depth"""
+
     vertices = (
         (width/2,-height/2,-depth/2),
         (width/2,height/2,-depth/2),
@@ -57,6 +56,8 @@ def drawBox(width,height,depth):
             glVertex3fv(vertices[vertex])
 
     glEnd()
+
+## end drawBox
 
 def drawHand():
     """Draws the 3D hand using euler angles and finger joint angles"""
@@ -213,7 +214,7 @@ def main():
         # refresh the frame
         pygame.display.flip()
 
-        # pygame.time.wait(20) # wait 20ms
+## end main
 
 if __name__ == "__main__":
     main()
