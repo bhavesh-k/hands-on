@@ -371,32 +371,29 @@ def parseSerialHandData(ser):
                 share_var.magCal   = int(lineList[7])
 
             # Fingers Part 1
-            elif lineList[0] == "Index:":
+            elif lineList[0] == "FingerDegrees:":
                 share_var.indexFingerDeg = float(lineList[1])
-                share_var.middleFingerDeg = float(lineList[3])
-                share_var.ringFingerDeg = float(lineList[5])
-                share_var.pinkieFingerDeg = float(lineList[7])
+                share_var.middleFingerDeg = float(lineList[2])
+                share_var.ringFingerDeg = float(lineList[3])
+                share_var.pinkieFingerDeg = float(lineList[4])
+                share_var.thumbDeg = float(lineList[5])
 
             # Fingers Part 2
-            elif lineList[0] == "IndexKnuckle:":
+            elif lineList[0] == "KnuckleDegrees:":
                 share_var.indexKnuckleDeg = float(lineList[1])
-                share_var.middleKnuckleDeg = float(lineList[3])
-                share_var.ringKnuckleDeg = float(lineList[5])
-                share_var.thumbDeg = float(lineList[7])
-                share_var.thumbKnuckleDeg = float(lineList[9])
+                share_var.middleKnuckleDeg = float(lineList[2])
+                share_var.ringKnuckleDeg = float(lineList[3])
+                share_var.thumbKnuckleDeg = float(lineList[4])
 
             # Touch Sensors Part 1
-            elif lineList[0] == "IndexSide:":
+            elif lineList[0] == "TouchSensors:":
                 share_var.touch1 = int(lineList[1])
-                share_var.touch2 = int(lineList[3])
-                share_var.touch3 = int(lineList[5])
-                share_var.touch4 = int(lineList[7])
-
-            # Touch Sensors Part 2
-            elif lineList[0] == "RingSide:":
-                share_var.touch5 = int(lineList[1])
-                share_var.touch6 = int(lineList[3])
-                share_var.touch7 = int(lineList[5])
+                share_var.touch2 = int(lineList[2])
+                share_var.touch3 = int(lineList[3])
+                share_var.touch4 = int(lineList[4])
+                share_var.touch5 = int(lineList[5])
+                share_var.touch6 = int(lineList[6])
+                share_var.touch7 = int(lineList[7])
                 # This line is the last one of the current serial data block so...
                 # Update the moving window deque structure with new sensor values
                 UpdateDequeData()
