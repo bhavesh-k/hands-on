@@ -184,7 +184,7 @@ def main():
 
     # view angle, aspect ratio, z_near, z_far (z's are clipping planes)
     gluPerspective(90, 1, 1.0, 50.0)
-    glTranslatef(0.0, 0.0, -4) # move cube away from screen (zoom out)
+    glTranslatef(0.0, 0.0, -20) # move cube away from screen (zoom out)
     glRotatef(0, 0, 0, 0)
 
     # Open serial port and parse serial input inside a thread
@@ -208,7 +208,7 @@ def main():
         # clear GL frame
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
-        # draw 3D hand and also update the pitch, yaw and roll
+        # draw 3D hand
         drawHand()
 
         # refresh the frame

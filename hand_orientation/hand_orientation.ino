@@ -29,6 +29,13 @@
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
+/* String constants for use in serial output */
+String sp = " ";
+String touchSensors = "TouchSensors: ";
+String fingerDegrees = "FingerDegrees: ";
+String knuckleDegrees = "KnuckleDegrees: ";
+
+
 /**************************************************************************/
 /*
     Displays some basic information on this sensor from the unified
@@ -258,32 +265,35 @@ void loop(void)
     flexDegrees[i] = map(flexRaw[i], flexDegCal[i][0], flexDegCal[i][1], 0, 90);
   }
 
-  Serial.println("FlexSensorBending(degrees)");
-  Serial.print("   Index: ");
-  Serial.print(flexDegrees[7],DEC);
-  Serial.print(F(" "));
-  Serial.print("Middle: ");
-  Serial.print(flexDegrees[6],DEC);
-  Serial.print(F(" "));
-  Serial.print("Ring: ");
-  Serial.print(flexDegrees[8],DEC);
-  Serial.print(F(" "));
-  Serial.print("Pinky: ");
-  Serial.println(flexDegrees[1],DEC);
-  Serial.print("   IndexKnuckle: ");
-  Serial.print(flexDegrees[5],DEC);
-  Serial.print(F(" "));
-  Serial.print("MiddleKnuckle: ");
-  Serial.print(flexDegrees[0],DEC);
-  Serial.print(F(" "));
-  Serial.print("RingKnuckle: ");
-  Serial.print(flexDegrees[2],DEC);
-  Serial.print(F(" "));
-  Serial.print("Thumb: ");
-  Serial.print(flexDegrees[4],DEC);
-  Serial.print(F(" "));
-  Serial.print("ThumbKnuckle: ");
-  Serial.println(flexDegrees[3],DEC);
+  // print the finger and knuckle bending degrees to serial output
+  Serial.println(fingerDegrees + flexDegrees[7] + sp + flexDegrees[6] + sp + flexDegrees[8] + sp + flexDegrees[1] + sp + flexDegrees[4]);
+  Serial.println(knuckleDegrees + flexDegrees[5] + sp + flexDegrees[0] + sp + flexDegrees[2] + sp + flexDegrees[3]);
+
+//  Serial.print("   Index: ");
+//  Serial.print(flexDegrees[7],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("Middle: ");
+//  Serial.print(flexDegrees[6],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("Ring: ");
+//  Serial.print(flexDegrees[8],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("Pinky: ");
+//  Serial.println(flexDegrees[1],DEC);
+//  Serial.print("   IndexKnuckle: ");
+//  Serial.print(flexDegrees[5],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("MiddleKnuckle: ");
+//  Serial.print(flexDegrees[0],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("RingKnuckle: ");
+//  Serial.print(flexDegrees[2],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("Thumb: ");
+//  Serial.print(flexDegrees[4],DEC);
+//  Serial.print(F(" "));
+//  Serial.print("ThumbKnuckle: ");
+//  Serial.println(flexDegrees[3],DEC);
 
 //  Serial.println("FlexSensorBending(raw)");
 //  Serial.print("   Index: ");
@@ -327,26 +337,8 @@ void loop(void)
     touchRaw[i] = touchRead(touchPinMap[i]);
   }
 
-  Serial.println("TouchSensors");
-  Serial.print("IndexSide: ");
-  Serial.print(touchRaw[0],DEC);
-  Serial.print(F(" "));
-  Serial.print("IndexTop: ");
-  Serial.print(touchRaw[1],DEC);
-  Serial.print(F(" "));
-  Serial.print("MiddleTop: ");
-  Serial.print(touchRaw[2],DEC);
-  Serial.print(F(" "));
-  Serial.print("MiddleSide: ");
-  Serial.println(touchRaw[3],DEC);
-  Serial.print("RingSide: ");
-  Serial.print(touchRaw[4],DEC);
-  Serial.print(F(" "));
-  Serial.print("PinkySide: ");
-  Serial.print(touchRaw[5],DEC);
-  Serial.print(F(" "));
-  Serial.print("PinkyTop: ");
-  Serial.println(touchRaw[6],DEC);
+  Serial.println(touchSensors + touchRaw[0] + sp + touchRaw[1] + sp + touchRaw[2] + sp + touchRaw[3] + sp + touchRaw[4] + sp + touchRaw[5] + sp + touchRaw[6]);
+
   
   delay(BNO055_SAMPLERATE_DELAY_MS);
 }
