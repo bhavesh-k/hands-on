@@ -3,67 +3,77 @@ share_var
 Authors: Bhavit Patel, Bhavesh Kakwani, Tom Yang
 Date Created: 2016
 
-Instantiation of variables for instantaneuous hand data
-and collections.deque structures for storing moving window of data
+Variables for instantaneuous hand sensor data and collections.deque objects for storing real-time moving window of sensor data
+Global to allow usage by multiple functions. Deques are thread-safe allowing multi-threading with GUI, serial parsing, and animation
 """
-
 import collections
 
+## Global variables to be used by various functions
 global alt, temp, sysCal, gyroCal, accelCal, magCal, \
-        indexFingerDeg, indexKnuckleDeg, \
-        middleFingerDeg, middleKnuckleDeg, \
-        ringFingerDeg, ringKnuckleDeg, \
-        pinkieFingerDeg, thumbDeg, thumbKnuckleDeg, \
-        touch1, touch2, touch3, touch4, \
-        touch5, touch6, touch7, \
-        q0, q1, q2, q3, \
+        flexIndexFinger, flexIndexKnuckle, \
+        flexMiddleFinger, flexMiddleKnuckle, \
+        flexRingFinger, flexRingKnuckle, \
+        flexPinkyFinger, flexThumb, flexThumbKnuckle, \
+        touchIndSide, touchIndTop, touchMidSide, touchMidTop, \
+        touchRing, touchPinkySide, touchPinkyTop, \
+        qW, qX, qY, qZ, \
         roll, pitch, yaw, \
-        xAcc, yAcc, zAcc
-        
-maxNumSamples = 100 #Set moving window length
-# Flex Sensors
-indexFingerDegCollect = collections.deque([0], maxNumSamples)
-indexKnuckleDegCollect = collections.deque([0], maxNumSamples)
-middleFingerDegCollect = collections.deque([0], maxNumSamples)
-middleKnuckleDegCollect = collections.deque([0], maxNumSamples)
-ringFingerDegCollect = collections.deque([0], maxNumSamples)
-ringKnuckleDegCollect = collections.deque([0], maxNumSamples)
-pinkieFingerDegCollect = collections.deque([0], maxNumSamples)
-thumbDegCollect = collections.deque([0], maxNumSamples)
-thumbKnuckleDegCollect = collections.deque([0], maxNumSamples)
-# Touch Capacitive Sensors
-touch1Collect = collections.deque([0], maxNumSamples)
-touch2Collect = collections.deque([0], maxNumSamples)
-touch3Collect = collections.deque([0], maxNumSamples)
-touch4Collect = collections.deque([0], maxNumSamples)
-touch5Collect = collections.deque([0], maxNumSamples)
-touch6Collect = collections.deque([0], maxNumSamples)
-touch7Collect = collections.deque([0], maxNumSamples)
-# Quaternions
-q0Collect = collections.deque([0], maxNumSamples)
-q1Collect = collections.deque([0], maxNumSamples)
-q2Collect = collections.deque([0], maxNumSamples)
-q3Collect = collections.deque([0], maxNumSamples)
-# Eurler Angles
-rollCollect = collections.deque([0], maxNumSamples)
-pitchCollect = collections.deque([0], maxNumSamples)
-yawCollect = collections.deque([0], maxNumSamples)
-# Linear Acceleration
-xAccCollect = collections.deque([0], maxNumSamples)
-yAccCollect = collections.deque([0], maxNumSamples)
-zAccCollect = collections.deque([0], maxNumSamples)
-
-# Current Values          
+        accelX, accelY, accelZ
+# Initialize Current Values          
 alt = temp = sysCal = gyroCal = accelCal = magCal = 0.0
-indexFingerDeg = indexKnuckleDeg = 0.0
-middleFingerDeg = middleKnuckleDeg = 0.0
-ringFingerDeg = ringKnuckleDeg = 0.0
-pinkieFingerDeg = 0.0
-thumbDeg = thumbKnuckleDeg = 0.0
-touch1 = touch2 = touch3 = touch4 = touch5 = touch6 = touch7 = 0.0
-q0 = q1 = q2 = q3 = 0.0
+flexIndexFinger = flexIndexKnuckle = 0.0
+flexMiddleFinger = flexMiddleKnuckle = 0.0
+flexRingFinger = flexRingKnuckle = 0.0
+flexPinkyFinger = 0.0
+flexThumb = flexThumbKnuckle = 0.0
+touchIndSide = touchIndTop = touchMidSide = touchMidTop = touchRing = touchPinkySide = touchPinkyTop = 0.0
+qW = qX = qY = qZ = 0.0
 roll = 0.0
 pitch = 0.0
 yaw = 0.0
-xAcc = yAcc = zAcc = 0.0 
+accelX = accelY = accelZ = 0.0 
+
+## Deque objects for fast and efficient real-time data collection. Also thread-safe to allow usage with GUI, animation, and various functions
+maxNumSamples = 100 #Set moving window length
+# Flex Sensors
+flexIndexFingerCollect = collections.deque([0], maxNumSamples)
+flexIndexKnuckleCollect = collections.deque([0], maxNumSamples)
+flexMiddleFingerCollect = collections.deque([0], maxNumSamples)
+flexMiddleKnuckleCollect = collections.deque([0], maxNumSamples)
+flexRingFingerCollect = collections.deque([0], maxNumSamples)
+flexRingKnuckleCollect = collections.deque([0], maxNumSamples)
+flexPinkyFingerCollect = collections.deque([0], maxNumSamples)
+flexThumbCollect = collections.deque([0], maxNumSamples)
+flexThumbKnuckleCollect = collections.deque([0], maxNumSamples)
+flexCollectList = [flexIndexFingerCollect, flexIndexKnuckleCollect, flexMiddleFingerCollect, \
+                        flexMiddleKnuckleCollect, flexRingFingerCollect, flexRingKnuckleCollect, \
+                        flexPinkyFingerCollect, flexThumbCollect, flexThumbKnuckleCollect]
+# Touch Capacitive Sensors
+touchIndSideCollect = collections.deque([0], maxNumSamples)
+touchIndTopCollect = collections.deque([0], maxNumSamples)
+touchMidSideCollect = collections.deque([0], maxNumSamples)
+touchMidTopCollect = collections.deque([0], maxNumSamples)
+touchRingCollect = collections.deque([0], maxNumSamples)
+touchPinkySideCollect = collections.deque([0], maxNumSamples)
+touchPinkyTopCollect = collections.deque([0], maxNumSamples)
+touchCollectList = [touchIndSideCollect, touchIndTopCollect, touchMidSideCollect, touchMidTopCollect, \
+                    touchRingCollect, touchPinkySideCollect, touchPinkyTopCollect]
+# Linear Acceleration
+accelXCollect = collections.deque([0], maxNumSamples)
+accelYCollect = collections.deque([0], maxNumSamples)
+accelZCollect = collections.deque([0], maxNumSamples)
+accelCollectList = [accelXCollect, accelYCollect, accelZCollect]
+# Quaternions
+qWCollect = collections.deque([0], maxNumSamples)
+qXCollect = collections.deque([0], maxNumSamples)
+qYCollect = collections.deque([0], maxNumSamples)
+qZCollect = collections.deque([0], maxNumSamples)
+quatCollectList = [qWCollect, qXCollect, qYCollect, qZCollect]
+# Euler Angles
+rollCollect = collections.deque([0], maxNumSamples)
+pitchCollect = collections.deque([0], maxNumSamples)
+yawCollect = collections.deque([0], maxNumSamples)
+eulerCollectList = [rollCollect, pitchCollect, yawCollect]
+# Multidimensional list containing all deque objects for easier processing
+sensorCollectList = [ flexCollectList, touchCollectList, accelCollectList, quatCollectList, eulerCollectList ]
 

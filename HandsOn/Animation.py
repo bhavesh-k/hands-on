@@ -80,97 +80,97 @@ def drawHand():
     # thumb knuckle
     glTranslatef(-3.2,0,-1.5)
     glRotatef(80,0,1,0) # rotate thumb sideways
-    glRotatef(-share_var.thumbKnuckleDeg, 1, 0, 0)
+    glRotatef(-share_var.flexThumbKnuckle, 1, 0, 0)
     glTranslatef(0,0,-2.0)
     drawBox(1,1,3.5)
     # thumb
     glTranslatef(0,0,-2.0)
-    glRotatef(-share_var.thumbDeg,1,0,0)
+    glRotatef(-share_var.flexThumb,1,0,0)
     glTranslatef(0,0,-1.0)
     drawBox(1,1,2)
     glTranslatef(0,0,1.0)
-    glRotatef(share_var.thumbDeg,1,0,0)
+    glRotatef(share_var.flexThumb,1,0,0)
     glTranslatef(0,0,2.0)
     # end thumb
     glTranslatef(0,0,2.0)
-    glRotatef(share_var.thumbKnuckleDeg, 1, 0, 0)
+    glRotatef(share_var.flexThumbKnuckle, 1, 0, 0)
     glRotatef(-80,0,1,0) # become parallel to palm again
     glTranslatef(3.2,0,1.5)
     # end thumb knuckle
 
     # index knuckle
     glTranslatef(-2.0,0,-3.0)
-    glRotatef(-share_var.indexKnuckleDeg, 1, 0, 0)
+    glRotatef(-share_var.flexIndexKnuckle, 1, 0, 0)
     glTranslatef(0,0,-2.5)
     drawBox(1,1,5)
     # index finger
     glTranslatef(0,0,-3.5)
-    glRotatef(-share_var.indexFingerDeg,1,0,0)
+    glRotatef(-share_var.flexIndexFinger,1,0,0)
     glTranslatef(0,0,-2.0)
     drawBox(1,1,4)
     glTranslatef(0,0,2.0)
-    glRotatef(share_var.indexFingerDeg,1,0,0)
+    glRotatef(share_var.flexIndexFinger,1,0,0)
     glTranslatef(0,0,3.5)
     # end index finger
     glTranslatef(0,0,2.5)
-    glRotatef(share_var.indexKnuckleDeg, 1, 0, 0)
+    glRotatef(share_var.flexIndexKnuckle, 1, 0, 0)
     glTranslatef(2.0,0,3.0)
     # end index knuckle
 
     # middle knuckle
     glTranslatef(-0.2,0,-3.5)
-    glRotatef(-share_var.middleKnuckleDeg, 1, 0, 0)
+    glRotatef(-share_var.flexMiddleKnuckle, 1, 0, 0)
     glTranslatef(0,0,-3.0)
     drawBox(1,1,6.0)
     # middle finger
     glTranslatef(0,0,-3.5)
-    glRotatef(-share_var.middleFingerDeg,1,0,0)
+    glRotatef(-share_var.flexMiddleFinger,1,0,0)
     glTranslatef(0,0,-2.5)
     drawBox(1,1,5)
     glTranslatef(0,0,2.5)
-    glRotatef(share_var.middleFingerDeg,1,0,0)
+    glRotatef(share_var.flexMiddleFinger,1,0,0)
     glTranslatef(0,0,3.5)
     # end middle finger
     glTranslatef(0,0,3.0)
-    glRotatef(share_var.middleKnuckleDeg, 1, 0, 0)
+    glRotatef(share_var.flexMiddleKnuckle, 1, 0, 0)
     glTranslatef(0.2,0,3.5)
     # end middle knuckle
 
     # ring knuckle
     glTranslatef(1.6,0,-3.0)
-    glRotatef(-share_var.ringKnuckleDeg, 1, 0, 0)
+    glRotatef(-share_var.flexRingKnuckle, 1, 0, 0)
     glTranslatef(0,0,-2.5)
     drawBox(1,1,5)
     # ring finger
     glTranslatef(0,0,-3.5)
-    glRotatef(-share_var.ringFingerDeg,1,0,0)
+    glRotatef(-share_var.flexRingFinger,1,0,0)
     glTranslatef(0,0,-2.0)
     drawBox(1,1,4)
     glTranslatef(0,0,2.0)
-    glRotatef(share_var.ringFingerDeg,1,0,0)
+    glRotatef(share_var.flexRingFinger,1,0,0)
     glTranslatef(0,0,3.5)
     # end ring finger
     glTranslatef(0,0,2.5)
-    glRotatef(share_var.ringKnuckleDeg, 1, 0, 0)
+    glRotatef(share_var.flexRingKnuckle, 1, 0, 0)
     glTranslatef(-1.6,0,3.0)
     # end ring knuckle
 
     # pinky knuckle
     glTranslatef(3.0,0,-3.5)
-    glRotatef(-share_var.pinkieFingerDeg, 1, 0, 0)
+    glRotatef(-share_var.flexPinkyFinger, 1, 0, 0)
     glTranslatef(0,0,-2.0)
     drawBox(1,1,4)
     # pinky finger
     glTranslatef(0,0,-2.0)
-    glRotatef(-share_var.pinkieFingerDeg,1,0,0)
+    glRotatef(-share_var.flexPinkyFinger,1,0,0)
     glTranslatef(0,0,-1.5)
     drawBox(1,1,3)
     glTranslatef(0,0,1.5)
-    glRotatef(share_var.pinkieFingerDeg,1,0,0)
+    glRotatef(share_var.flexPinkyFinger,1,0,0)
     glTranslatef(0,0,2.0)
     # end pinky finger
     glTranslatef(0,0,2.0)
-    glRotatef(share_var.pinkieFingerDeg, 1, 0, 0)
+    glRotatef(share_var.flexPinkyFinger, 1, 0, 0)
     glTranslatef(-3.0,0,3.5)
     # end pinky knuckle
 

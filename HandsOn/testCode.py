@@ -2,7 +2,6 @@
 testCode
 Authors: Bhavit Patel
 Date Created: March 2016
-Version 1
 
 Allows testing of various modules and functions in HandsOn 
 without the data glove to ensure proper functionality
@@ -58,7 +57,7 @@ def main():
     serialThread.setDaemon(True)
     serialThread.start()
 
-    pseudoMainThread = threading.Thread(target=HandsOn.pseudoMain)
+    pseudoMainThread = threading.Thread(target=HandsOn.pseudoMain, args=(4,True,True))
     pseudoMainThread.setDaemon(True)
     pseudoMainThread.start()
 
