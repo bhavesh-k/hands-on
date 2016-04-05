@@ -26,8 +26,8 @@ def UpdateDequeData():
     # Touch Sensors
     share_var.touchIndSideCollect.append(share_var.touchIndSide)
     share_var.touchIndTopCollect.append(share_var.touchIndTop)
-    share_var.touchMidSideCollect.append(share_var.touchMidSide)
     share_var.touchMidTopCollect.append(share_var.touchMidTop)
+    share_var.touchMidSideCollect.append(share_var.touchMidSide)
     share_var.touchRingCollect.append(share_var.touchRing)
     share_var.touchPinkySideCollect.append(share_var.touchPinkySide)
     share_var.touchPinkyTopCollect.append(share_var.touchPinkyTop)
@@ -115,7 +115,7 @@ def TouchMeanBoolList():
     meanList = DequeMeanList(share_var.touchCollectList)
     # replace means with boolean int (0 or 1)
     for i in range(0,len(meanList)):
-        meanList[i] = 1 if (meanList[i] > touchThres) else 0
+        meanList[i] = 100 if (meanList[i] > touchThres) else 0
     return( meanList )
 ## end of TouchMeanBoolList()
 
@@ -156,6 +156,41 @@ def LinAccelCurrDataStr():
     return( ListToCSstr(tmpList) )
 ## end of LinAccelCurrDataStr()
 
+def LinAccelMeanDataList():
+    """ Returns the mean of collected Linear Accelreation data as a list """
+    return (DequeMeanList(share_var.accelCollectList))
+## end of LinAccelMeanDataList()
+
+def LinAccelMeanDataStr():
+    """ Returns the mean of collected Linear Acceleration data in the form of a string separated by ","s """
+    meanList = DequeMeanList(share_var.accelCollectList)
+    return( ListToCSstr(meanList) )
+## end of FlexMeanDataStr()
+
+def LinAccelMoving():
+    numPreviousSamples = 5
+    movingList = [0]*3
+    i = 0
+    for deq in share_var.accelCollectList:
+        sum = 0
+        for j in range(1,numPreviousSamples+1):
+            sum = sum + abs(deq(-j))
+            meanAbs = sum/numPreviousSamples
+            movingList[i]= meanAbs
+        i += 1
+    return (movingList)
+## end of LinAccelMoving
+
+def isMoving():
+    """ Returns a boolean if the user is moving determined wtih the collected linear acceleration """
+    movingList = LinAccelMoving()
+    moveFlag = False;
+    linAccelThres = 0.5
+    for direction in movingList:
+        if direction > linAccelThres:
+            moveFlag = True;
+    return moveFlag
+## end of isMoving
 
 def QuatToEuler(q0, q1, q2, q3):
     """ Euler Angle calculation from quaternions """

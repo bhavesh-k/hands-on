@@ -34,7 +34,7 @@ yaw = 0.0
 accelX = accelY = accelZ = 0.0 
 
 ## Deque objects for fast and efficient real-time data collection. Also thread-safe to allow usage with GUI, animation, and various functions
-maxNumSamples = 100 #Set moving window length
+maxNumSamples = 25 #Set moving window length
 # Flex Sensors
 flexIndexFingerCollect = collections.deque([0], maxNumSamples)
 flexIndexKnuckleCollect = collections.deque([0], maxNumSamples)
@@ -56,7 +56,7 @@ touchMidTopCollect = collections.deque([0], maxNumSamples)
 touchRingCollect = collections.deque([0], maxNumSamples)
 touchPinkySideCollect = collections.deque([0], maxNumSamples)
 touchPinkyTopCollect = collections.deque([0], maxNumSamples)
-touchCollectList = [touchIndSideCollect, touchIndTopCollect, touchMidSideCollect, touchMidTopCollect, \
+touchCollectList = [touchIndSideCollect, touchIndTopCollect, touchMidTopCollect, touchMidSideCollect, \
                     touchRingCollect, touchPinkySideCollect, touchPinkyTopCollect]
 # Linear Acceleration
 accelXCollect = collections.deque([0], maxNumSamples)

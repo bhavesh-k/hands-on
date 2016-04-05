@@ -342,8 +342,13 @@ class ClassifyRealTime(QtCore.QThread):
     def run(self):
         while True:
             self.sleep(self.delay)
+            while Tools.isMoving():
+                self.sleep(0.02)
             # Organize features to be used for classifier prediction
-            featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + Tools.QuatMeanDataList()
+            test = Tools.QuatMeanDataList()
+            l = [x * 100 for x in test]
+            featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + l
+            #featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + Tools.QuatMeanDataList()
             gest = np.asarray(featureList)
             predictedGest = self.clf.predict(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
             predictedGest = [predictedGest[0]] #convert from numpy array to list

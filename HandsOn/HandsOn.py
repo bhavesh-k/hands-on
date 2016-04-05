@@ -159,8 +159,8 @@ def parseLineData(line):
         elif lineList[0] == "TouchSensors:":
             share_var.touchIndSide = int(lineList[1])
             share_var.touchIndTop = int(lineList[2])
-            share_var.touchMidSide = int(lineList[3])
-            share_var.touchMidTop = int(lineList[4])
+            share_var.touchMidTop = int(lineList[3])
+            share_var.touchMidSide = int(lineList[4])
             share_var.touchRing = int(lineList[5])
             share_var.touchPinkySide = int(lineList[6])
             share_var.touchPinkyTop = int(lineList[7])
