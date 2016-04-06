@@ -3,7 +3,7 @@ Tools
 Authors: Bhavit Patel, Bhavesh Kakwani, Tom Yang
 Date Created: March 2016
 
-Contains multiple functions and tools for processing hand sensor data obtained 
+Contains multiple functions and tools for processing hand sensor data obtained
 from parseSerialData() and stored in global variables or deque objects in share_var
 """
 import share_var
@@ -65,7 +65,7 @@ def DequeMeanList(deqList):
         i += 1 #increment
     return meanList
 ## end of DequeMeanList(deqList)
-    
+
 def ListToCSstr(list):
     """ Returns a comma separated string consisting of values in input list """
     return(','.join(repr(e) for e in list))
@@ -123,7 +123,7 @@ def TouchMeanBoolStr():
     """ Returns a boolean int (0 or 1) from the means of collected Touch Sensor data in the form of a string separated by ","s
         0 if TouchMean < threshold (ie. touch sensor has not been touched)
         1 if TouchMean > threshold (ie. touch sensor has been touched) """
-    meanList = TouchMeanBoolList()    
+    meanList = TouchMeanBoolList()
     return( ListToCSstr(meanList) )
 ## end of TouchMeanBoolStr()
 
@@ -172,10 +172,10 @@ def LinAccelMoving():
     movingList = [0]*3
     i = 0
     for deq in share_var.accelCollectList:
-        sum = 0
+        sumAcc = 0
         for j in range(1,numPreviousSamples+1):
-            sum = sum + abs(deq(-j))
-            meanAbs = sum/numPreviousSamples
+            sumAcc = sumAcc + abs(list(deq)[-j])
+            meanAbs = sumAcc/numPreviousSamples
             movingList[i]= meanAbs
         i += 1
     return (movingList)
@@ -185,7 +185,7 @@ def isMoving():
     """ Returns a boolean if the user is moving determined wtih the collected linear acceleration """
     movingList = LinAccelMoving()
     moveFlag = False;
-    linAccelThres = 0.5
+    linAccelThres = 0.25
     for direction in movingList:
         if direction > linAccelThres:
             moveFlag = True;

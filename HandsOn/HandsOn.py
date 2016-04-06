@@ -34,7 +34,8 @@ def pseudoMain(delay, debugFlag, ttsFlag):
     if ttsFlag:
         # Instantiate the text-to-speech engine
         engine = pyttsx.init()
-    
+        engine.setProperty('rate',120)
+
     svmFlag = False #Flag to determine if the SVM has been instantiated and fit
 
     while True:
@@ -58,7 +59,7 @@ def pseudoMain(delay, debugFlag, ttsFlag):
             print("Creating the SVM and fitting the data...")
             clf = svm.SVC(C=1, kernel='rbf',gamma=0.0001,probability=True)
             clf_tree = tree.DecisionTreeClassifier() # decision tree version of classifier
-            
+
             # Train the classifiers
             clf.fit(signFeatures,signTarget)
             clf_tree.fit(signFeatures,signTarget)
@@ -79,7 +80,7 @@ def pseudoMain(delay, debugFlag, ttsFlag):
                         print("SVM is predicting hand gestures...")
                         time.sleep(delay) # Wait time between classifications
                         #kernal_svm_time = time() #Timing how long SVM takes to classify
-                        
+
                         # Organize features to be used for classifier prediction
                         featureList = FlexMeanDataList() + TouchMeanBoolList() + QuatMeanDataList()
                         gest = np.asarray(featureList)

@@ -17,6 +17,7 @@ import collections
 from sklearn import svm
 from sklearn import tree
 import pyttsx
+from espeak import espeak
 
 from PyQt5 import QtCore, QtGui, QtWidgets # Import Qt main modules
 import HandsOn_GUI_Layout # Imports our designed .ui layout that was converted to .py
@@ -43,10 +44,10 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         self.setupUi(self)  # Defined in HandsOn_GUI_Layout.py automatically. Sets up layout and widgets that are defined
         self._initButtons() # Initilize all button connections
 
-        ## Instance variables for file names 
+        ## Instance variables for file names
         self.gestFileName = ""
         self.trainFileName = ""
-        
+
         ## Log File Iterator to prevent overwriting log files on same day
         self.logFileIterator = 1
 
@@ -57,7 +58,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         self.sensorLineEdits = [ [self.indexLineEdit, self.indexKnuckleLineEdit, self.middleLineEdit, self.middleKnuckleLineEdit, self.ringLineEdit, self.ringKnuckleLineEdit,  self.pinkyLineEdit, self.thumbLineEdit, self.thumbKnuckeLineEdit], \
                                 [self.indexSideLineEdit, self.indexTopLineEdit, self.middleTopLineEdit, self.middleSideLineEdit, self.ringSideLineEdit, self.pinkySideLineEdit, self.pinkyTopLineEdit], \
                                 [self.accelXLineEdit, self.accelYLineEdit, self.accelZLineEdit], \
-                                [self.quatWLineEdit, self.quatXLineEdit, self.quatYLineEdit, self.quatZLineEdit] ]                             
+                                [self.quatWLineEdit, self.quatXLineEdit, self.quatYLineEdit, self.quatZLineEdit] ]
 
     def _initButtons(self):
         # Capture Gesture
@@ -135,7 +136,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
 
     def TrainClassifier(self):
         """ Trains the classifier using the training examples in "self.trainFileName" """
-        signTarget, signFeatures = Tools.readHandDataFromFile(self.trainFileName)      
+        signTarget, signFeatures = Tools.readHandDataFromFile(self.trainFileName)
         # Instantiate the SVM object
         self.clf = svm.SVC(C=1, kernel='rbf',gamma=0.0001,probability=True)
         self.clf_tree = tree.DecisionTreeClassifier() # decision tree version of classifier
@@ -161,7 +162,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         self.classifyThread.sig_PredictedGest.connect(self.UpdatePredictionDisplay)
         self.classifyThread.start()
     ## end of StartClassifyThread
-        
+
     def EndClassifyThread(self):
         """ Terminates Classify thread """
         self.classifyThread.terminate()
@@ -182,7 +183,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
 
     def LogSession(self, predList):
         currentTime = time.strftime("%Y-%m-%d", time.localtime())
-        logFileName = "Logs/" + currentTime + "-LogFile" + str(self.logFileIterator) + ".txt"   
+        logFileName = "Logs/" + currentTime + "-LogFile" + str(self.logFileIterator) + ".txt"
         outFile = open(logFileName, 'a+') #Open in append and create file if it does not exist
         outFile.seek(0) # Start of file
         if outFile.read() == "":
@@ -214,13 +215,13 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         # Connect signal sig_UpdateData from SerialParse class thread to UpdateSensorDisplay method below
         self.serialParseThread.sig_UpdateData.connect(self.UpdateSensorDisplay)
         self.serialParseThread.start()
-    ## end of StartSerialParseThread   
-    
+    ## end of StartSerialParseThread
+
     def EndSerialParseThread(self):
         """ Terminates SerialParse thread """
         # terminate thread
         self.serialParseThread.terminate()
-        # enable start button and disable stop        
+        # enable start button and disable stop
         self.btnSerialParseStart.setEnabled(True)
         self.btnSerialParseStop.setEnabled(False)
     ## end of EndSerialParseThread
@@ -230,7 +231,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         # If box is checked, display the average of the moving window rather than instantaneuous values
         dataOutAvgFlag = self.checkBoxDataOutAvg.isChecked()
         for i in range(0,len(share_var.sensorCollectList)):
-            for j in range(0, len(share_var.sensorCollectList[i])):         
+            for j in range(0, len(share_var.sensorCollectList[i])):
                 #Update GUI sensor value displays
                 if i == 4:
                     # Ignore euler angles display for now (5th item in sensorDataList)
@@ -258,7 +259,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         """ Terminates Hand Animation Thread """
         # terminate thread
         self.animateHandThread.terminate()
-        # enable start button and disable stop        
+        # enable start button and disable stop
         self.btnHandAnimateStart.setEnabled(True)
         self.btnHandAnimateStop.setEnabled(False)
     ## end of EndAnimateThread
@@ -273,12 +274,12 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         x=0
     ## end of StopPlotThread
 
-## end of DevApp class        
+## end of DevApp class
 
 
 class SerialParse(QtCore.QThread):
     """ Threading class using QThread to perform parsing of serial data containing flex sensor, touch sensor, and IMU data """
-    # Signal to communicate with main program class. signal will emit and run a method we connect it to in the main program class  
+    # Signal to communicate with main program class. signal will emit and run a method we connect it to in the main program class
     sig_UpdateData = QtCore.pyqtSignal()
 
     def __init__(self):
@@ -286,12 +287,12 @@ class SerialParse(QtCore.QThread):
 
     def __del__(self):
         self.wait()
-    
+
     ## rename "runTest" to "run" and rename "run" to "run1" in order to use the runTest method
     def runTest(self):
         """ Simple test for SerialParse threading, multidimensional lists of deque objects, and updating GUI without glove data """
         i = 0
-        while True:           
+        while True:
             for deq in share_var.flexCollectList:
                 deq.append(i)
             for deq in share_var.touchCollectList:
@@ -302,27 +303,27 @@ class SerialParse(QtCore.QThread):
                 deq.append(4*i)
             for deq in share_var.eulerCollectList:
                 deq.append(5*i)
-            self.sig_UpdateData.emit()            
+            self.sig_UpdateData.emit()
             i += 1
             self.sleep(1)
 
     def run(self):
         """ Opens serial port and parses data. Emits signal to update GUI sensor display values after sensor data in share_var has been updated """
-        ser = serial.Serial('COM3', 9600) # Bhavit's PORT
-        #ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
+        #ser = serial.Serial('COM3', 9600) # Bhavit's PORT
+        ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
         while True:
             line = ser.readline() #Read line until \n
             #print(line)
-            HandsOn.parseLineData(line)  
+            HandsOn.parseLineData(line)
             self.sig_UpdateData.emit()
 ## end of SerialParse class
 
 
 class ClassifyRealTime(QtCore.QThread):
     """ Threading class using QThread to perform real-time classification of hand gestures """
-    # Signal to communicate with main program class. signal will emit and run a method we connect it to in the main program class  
+    # Signal to communicate with main program class. signal will emit and run a method we connect it to in the main program class
     sig_PredictedGest = QtCore.pyqtSignal(list)
-    
+
     def __init__(self, trainedClassifier, delay, debugFlag, ttsFlag):
         super(ClassifyRealTime, self).__init__()
         self.clf = trainedClassifier
@@ -334,16 +335,20 @@ class ClassifyRealTime(QtCore.QThread):
     def _initTTS(self):
         if self.ttsFlag:
             # Instantiate the text-to-speech engine
-            self.engine = pyttsx.init()
+            #self.engine = pyttsx.init()
+            espeak.set_voice('english-us','en-us') # 'Murica!
+            espeak.set_parameter(espeak.Parameter.Pitch,50) # medium pitch
+            espeak.set_parameter(espeak.Parameter.Rate,120) # decent speed
 
     def __del__(self):
         self.wait()
 
     def run(self):
         while True:
-            self.sleep(self.delay)
+            time.sleep(self.delay)
             while Tools.isMoving():
-                self.sleep(0.02)
+                time.sleep(0.02)
+            time.sleep(0.5)
             # Organize features to be used for classifier prediction
             test = Tools.QuatMeanDataList()
             l = [x * 100 for x in test]
@@ -357,9 +362,11 @@ class ClassifyRealTime(QtCore.QThread):
                 predictedGest = [predictedGest[0], predictedGestProba]
             self.sig_PredictedGest.emit(predictedGest) # Emit the predicted results to be displayed in GUI
             if self.ttsFlag:
-                # Text to speech of output
-                self.engine.say(predictedGest[0])
-                self.engine.runAndWait()
+                # Text to speech of output using espeak
+                espeak.synth(predictedGest[0])
+                # self.engine.say(predictedGest[0])
+                # self.engine.setProperty('rate',150)
+                # self.engine.runAndWait()
 ## end of ClassifyRealTime class
 
 

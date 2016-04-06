@@ -182,37 +182,37 @@ void loop(void)
   */
 
   /* The processing sketch expects data as roll, pitch, yaw */
-  Serial.println(F("Orientation(degrees)"));
-  Serial.print(F("   Yaw: "));
+  Serial.println("Orientation(degrees)");
+  Serial.print("   Yaw: ");
   Serial.print((float)event.orientation.x); // yaw
-  Serial.print(F(" Pitch: "));
+  Serial.print(" Pitch: ");
   Serial.print((float)event.orientation.y); // roll
-  Serial.print(F(" Roll: "));
+  Serial.print(" Roll: ");
   Serial.println((float)event.orientation.z); // pitch
 
   /* Quaternions */
   imu::Quaternion quat = bno.getQuat();
-  Serial.println(F("Quaternions"));
-  Serial.print(F("   qW: "));
+  Serial.println("Quaternions");
+  Serial.print("   qW: ");
   Serial.print(quat.w(),4);
-  Serial.print(F(" qX: "));
+  Serial.print(" qX: ");
   Serial.print(quat.x(),4);
-  Serial.print(F(" qY: "));
+  Serial.print(" qY: ");
   Serial.print(quat.y(),4);
-  Serial.print(F(" qZ: "));
+  Serial.print(" qZ: ");
   Serial.println(quat.z(),4);
 
   /* Also send calibration data for each sensor. */
   uint8_t sys, gyro, accel, mag = 0;
   bno.getCalibration(&sys, &gyro, &accel, &mag);
-  Serial.println(F("Calibration"));
-  Serial.print(F("   System: ")); 
+  Serial.println("Calibration");
+  Serial.print("   System: "); 
   Serial.print(sys, DEC);
-  Serial.print(F(" Gyro: "));
+  Serial.print(" Gyro: ");
   Serial.print(gyro, DEC);
-  Serial.print(F(" Accel: "));
+  Serial.print(" Accel: ");
   Serial.print(accel, DEC);
-  Serial.print(F(" Mag: "));
+  Serial.print(" Mag: ");
   Serial.println(mag, DEC);
    
   /*Get acceleration information*/
