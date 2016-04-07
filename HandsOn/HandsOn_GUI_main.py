@@ -17,7 +17,7 @@ import collections
 from sklearn import svm
 from sklearn import tree
 import pyttsx
-from espeak import espeak
+#from espeak import espeak
 
 from PyQt5 import QtCore, QtGui, QtWidgets # Import Qt main modules
 import HandsOn_GUI_Layout # Imports our designed .ui layout that was converted to .py
@@ -58,7 +58,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         self.sensorLineEdits = [ [self.indexLineEdit, self.indexKnuckleLineEdit, self.middleLineEdit, self.middleKnuckleLineEdit, self.ringLineEdit, self.ringKnuckleLineEdit,  self.pinkyLineEdit, self.thumbLineEdit, self.thumbKnuckeLineEdit], \
                                 [self.indexSideLineEdit, self.indexTopLineEdit, self.middleTopLineEdit, self.middleSideLineEdit, self.ringSideLineEdit, self.pinkySideLineEdit, self.pinkyTopLineEdit], \
                                 [self.accelXLineEdit, self.accelYLineEdit, self.accelZLineEdit], \
-                                [self.quatWLineEdit, self.quatXLineEdit, self.quatYLineEdit, self.quatZLineEdit] ]
+                                [self.quatWLineEdit, self.quatXLineEdit, self.quatYLineEdit, self.quatZLineEdit], [self.rollLineEdit, self.pitchLineEdit, self.yawLineEdit] ]
 
     def _initButtons(self):
         # Capture Gesture
@@ -232,18 +232,13 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         dataOutAvgFlag = self.checkBoxDataOutAvg.isChecked()
         for i in range(0,len(share_var.sensorCollectList)):
             for j in range(0, len(share_var.sensorCollectList[i])):
-                #Update GUI sensor value displays
-                if i == 4:
-                    # Ignore euler angles display for now (5th item in sensorDataList)
-                    break
+                if dataOutAvgFlag:
+                    # Display mean of moving average stored in deques
+                    mean = Tools.DequeMean(share_var.sensorCollectList[i][j])
+                    self.sensorLineEdits[i][j].setText(str(mean))
                 else:
-                    if dataOutAvgFlag:
-                        # Display mean of moving average stored in deques
-                        mean = Tools.DequeMean(share_var.sensorCollectList[i][j])
-                        self.sensorLineEdits[i][j].setText(str(mean))
-                    else:
-                        # Display instataneuous values
-                        self.sensorLineEdits[i][j].setText(str(share_var.sensorCollectList[i][j][-1]))
+                    # Display instataneuous values
+                    self.sensorLineEdits[i][j].setText(str(share_var.sensorCollectList[i][j][-1]))
     ## end of UpdateSensorDisplay
 
     def StartAnimateThread(self):
@@ -309,8 +304,8 @@ class SerialParse(QtCore.QThread):
 
     def run(self):
         """ Opens serial port and parses data. Emits signal to update GUI sensor display values after sensor data in share_var has been updated """
-        #ser = serial.Serial('COM3', 9600) # Bhavit's PORT
-        ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
+        ser = serial.Serial('COM3', 9600) # Bhavit's PORT
+        #ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
         while True:
             line = ser.readline() #Read line until \n
             #print(line)
@@ -335,20 +330,19 @@ class ClassifyRealTime(QtCore.QThread):
     def _initTTS(self):
         if self.ttsFlag:
             # Instantiate the text-to-speech engine
-            #self.engine = pyttsx.init()
-            espeak.set_voice('english-us','en-us') # 'Murica!
-            espeak.set_parameter(espeak.Parameter.Pitch,50) # medium pitch
-            espeak.set_parameter(espeak.Parameter.Rate,120) # decent speed
+            self.engine = pyttsx.init()
+            #espeak.set_voice('english-us','en-us') # 'Murica!
+            #espeak.set_parameter(espeak.Parameter.Pitch,50) # medium pitch
+            #espeak.set_parameter(espeak.Parameter.Rate,120) # decent speed
 
     def __del__(self):
         self.wait()
 
     def run(self):
         while True:
-            time.sleep(self.delay)
             while Tools.isMoving():
                 time.sleep(0.02)
-            time.sleep(0.5)
+            time.sleep(self.delay)
             # Organize features to be used for classifier prediction
             test = Tools.QuatMeanDataList()
             l = [x * 100 for x in test]
@@ -363,10 +357,10 @@ class ClassifyRealTime(QtCore.QThread):
             self.sig_PredictedGest.emit(predictedGest) # Emit the predicted results to be displayed in GUI
             if self.ttsFlag:
                 # Text to speech of output using espeak
-                espeak.synth(predictedGest[0])
-                # self.engine.say(predictedGest[0])
-                # self.engine.setProperty('rate',150)
-                # self.engine.runAndWait()
+                #espeak.synth(predictedGest[0])
+                self.engine.say(predictedGest[0])
+                #self.engine.setProperty('rate',150)
+                self.engine.runAndWait()
 ## end of ClassifyRealTime class
 
 
