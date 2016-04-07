@@ -151,6 +151,8 @@ def parseLineData(line):
             share_var.pitch = -math.degrees(p)
             share_var.roll = -math.degrees(r)
             share_var.yaw = math.degrees(y)
+            #share_var.direction = EulerToDir(share_var.roll,share_var.pitch,share_var.yaw)
+            share_var.direction = QuatToDir()
         #Linear Acceleration
         elif lineList[0] == "Acceleration":
             share_var.accelX = float(lineList[1])

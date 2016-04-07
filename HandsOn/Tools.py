@@ -207,6 +207,50 @@ def QuatToEuler(q0, q1, q2, q3):
     return([roll, pitch, yaw])
 ## end of QuatToEuler(...)
 
+def EulerToDir(roll,pitch,yaw):
+    """ Convert Euler angles to hand direction (down, up, or other) """
+    direction = 3 # other direction
+    if ((yaw < 30) and (yaw > -30)):
+        if ((pitch > 45) and (pitch < 135)):
+            direction = 2 # hand pointing up
+        elif ((pitch < -70) and (pitch > -135)):
+            direction = 1 # hand pointing down
+
+    return direction
+## end of EulerToDir
+
+def QuatToDir():
+    """ Convert quaternions to hand direction (down, up, or other) """
+    q = (share_var.qW, share_var.qX, share_var.qY, share_var.qZ)
+    hand_dir = (1, 0, 0)
+    hand_dir = qv_mult(q, hand_dir)
+
+    z_dir = hand_dir[2]
+    direction = 3
+    if (z_dir > 0.75):
+        direction = 2 # hand pointing up
+    elif (z_dir < -0.8):
+        direction = 1 # hand pointing down
+
+    return direction
+## end of QuatToDir
+
+def q_conjugate(q):
+    w, x, y, z = q
+    return (w, -x, -y, -z)
+
+def q_mult(q1, q2):
+    w1, x1, y1, z1 = q1
+    w2, x2, y2, z2 = q2
+    w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
+    x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2
+    y = w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2
+    z = w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2
+    return w, x, y, z
+
+def qv_mult(q1, v1):
+    q2 = (0.0,) + v1
+    return q_mult(q_mult(q1, q2), q_conjugate(q1))[1:]
 
 def printInstHandDataToFile(fileName, str_handIdentifier):
     """ Inputs a letter/number/gesture identifying the hand animation being performed

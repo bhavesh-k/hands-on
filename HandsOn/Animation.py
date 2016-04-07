@@ -70,12 +70,12 @@ def drawBox(width,height,depth,touched):
             glVertex3fv(vertices[vertex])
     glEnd()
 
-    glBegin(GL_LINES)
-    for edge in edges:
-        for vertex in edge:
-            glColor3fv((1,1,1))
-            glVertex3fv(vertices[vertex])
-    glEnd()
+    # glBegin(GL_LINES)
+    # for edge in edges:
+    #     for vertex in edge:
+    #         glColor3fv((1,1,1))
+    #         glVertex3fv(vertices[vertex])
+    # glEnd()
 
 ## end drawBox
 

@@ -230,6 +230,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         """ Updates GUI display after signal emitted by ParseSerial thread indiciating sensor values have been updated """
         # If box is checked, display the average of the moving window rather than instantaneuous values
         dataOutAvgFlag = self.checkBoxDataOutAvg.isChecked()
+        self.lineEditFileOut.setText(str(share_var.direction))
         for i in range(0,len(share_var.sensorCollectList)):
             for j in range(0, len(share_var.sensorCollectList[i])):
                 if dataOutAvgFlag:
@@ -304,8 +305,8 @@ class SerialParse(QtCore.QThread):
 
     def run(self):
         """ Opens serial port and parses data. Emits signal to update GUI sensor display values after sensor data in share_var has been updated """
-        ser = serial.Serial('COM3', 9600) # Bhavit's PORT
-        #ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
+        #ser = serial.Serial('COM3', 9600) # Bhavit's PORT
+        ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
         while True:
             line = ser.readline() #Read line until \n
             #print(line)

@@ -17,9 +17,9 @@ global alt, temp, sysCal, gyroCal, accelCal, magCal, \
         touchIndSide, touchIndTop, touchMidSide, touchMidTop, \
         touchRing, touchPinkySide, touchPinkyTop, \
         qW, qX, qY, qZ, \
-        roll, pitch, yaw, \
+        roll, pitch, yaw, direction, \
         accelX, accelY, accelZ
-# Initialize Current Values          
+# Initialize Current Values
 alt = temp = sysCal = gyroCal = accelCal = magCal = 0.0
 flexIndexFinger = flexIndexKnuckle = 0.0
 flexMiddleFinger = flexMiddleKnuckle = 0.0
@@ -31,7 +31,8 @@ qW = qX = qY = qZ = 0.0
 roll = 0.0
 pitch = 0.0
 yaw = 0.0
-accelX = accelY = accelZ = 0.0 
+direction = 0
+accelX = accelY = accelZ = 0.0
 
 ## Deque objects for fast and efficient real-time data collection. Also thread-safe to allow usage with GUI, animation, and various functions
 maxNumSamples = 25 #Set moving window length
@@ -76,4 +77,3 @@ yawCollect = collections.deque([0], maxNumSamples)
 eulerCollectList = [rollCollect, pitchCollect, yawCollect]
 # Multidimensional list containing all deque objects for easier processing
 sensorCollectList = [ flexCollectList, touchCollectList, accelCollectList, quatCollectList, eulerCollectList ]
-
