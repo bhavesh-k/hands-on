@@ -2,8 +2,17 @@ import share_var
 import HandsOn
 import threading
 import serial
-from pymouse import PyMouse
-from pykeyboard import PyKeyboard
+import time
+# from pymouse import PyMouse
+# from pykeyboard import PyKeyboard
+
+def eulerDisplay():
+    """ Show Euler angles of hand """
+    while True:
+        time.sleep(1)
+        print("Pitch: "+str(share_var.pitch))
+        print("Roll: "+str(share_var.roll))
+        print("Yaw: "+str(share_var.yaw))
 
 def mouseControl():
     """ Control the mouse using glove accelerometer """
@@ -85,7 +94,7 @@ def main():
     serialThread.setDaemon(True)
     serialThread.start()
 
-    mouseThread = threading.Thread(target=mouseControl)
+    mouseThread = threading.Thread(target=eulerDisplay)
     mouseThread.setDaemon(True)
     mouseThread.start()
 

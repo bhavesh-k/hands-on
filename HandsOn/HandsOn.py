@@ -142,20 +142,20 @@ def parseLineData(line):
             share_var.flexRingKnuckle = float(lineList[3])
             share_var.flexThumbKnuckle = float(lineList[4])
         # Quaternions
-        elif lineList[0] == "qW:":
-            share_var.qW = float(lineList[1])
-            share_var.qX = float(lineList[3])
-            share_var.qY = float(lineList[5])
-            share_var.qZ = float(lineList[7])
+        elif lineList[0] == "Quaternions":
+            share_var.qW = float(lineList[1])/100.0
+            share_var.qX = float(lineList[2])/100.0
+            share_var.qY = float(lineList[3])/100.0
+            share_var.qZ = float(lineList[4])/100.0
             [r,p,y] = QuatToEuler(share_var.qW,share_var.qX,share_var.qY,share_var.qZ)
             share_var.pitch = -math.degrees(p)
             share_var.roll = -math.degrees(r)
             share_var.yaw = math.degrees(y)
         #Linear Acceleration
-        elif lineList[0] == "aX:":
+        elif lineList[0] == "Acceleration":
             share_var.accelX = float(lineList[1])
-            share_var.accelY = float(lineList[3])
-            share_var.accelZ = float(lineList[5])
+            share_var.accelY = float(lineList[2])
+            share_var.accelZ = float(lineList[3])
         # Touch Sensors
         elif lineList[0] == "TouchSensors:":
             share_var.touchIndSide = int(lineList[1])
