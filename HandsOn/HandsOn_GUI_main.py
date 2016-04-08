@@ -17,7 +17,7 @@ import collections
 from sklearn import svm
 from sklearn import tree
 import pyttsx
-#from espeak import espeak
+from espeak import espeak
 
 from PyQt5 import QtCore, QtGui, QtWidgets # Import Qt main modules
 import HandsOn_GUI_Layout # Imports our designed .ui layout that was converted to .py
@@ -141,7 +141,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         """ Trains the classifier using the training examples in "self.trainFileName" """
         signTarget, signFeatures = Tools.readHandDataFromFile(self.trainFileName)
         # Instantiate the SVM object
-        self.clf = svm.SVC(C=1, kernel='rbf',gamma=0.0001,probability=True)
+        self.clf = svm.SVC(C=100, kernel='rbf',gamma=0.0001,probability=True)
         #self.clf_tree = tree.DecisionTreeClassifier() # decision tree version of classifier
         # Train the classifiers
         self.clf.fit(signFeatures,signTarget)
@@ -187,7 +187,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
                 self.plainTextEditClassRT.appendPlainText(predList[0] + Tools.ListToCSstr(predList[1]))
         else:
             if self.restFlag != True:
-                self.plainTextEditClassRT.appendPlainText(" ")
+                self.plainTextEditClassRT.appendPlainText("")
                 self.restFlag = True
         # Update log file
         self.LogSession(predList)
@@ -324,8 +324,8 @@ class SerialParse(QtCore.QThread):
 
     def run(self):
         """ Opens serial port and parses data. Emits signal to update GUI sensor display values after sensor data in share_var has been updated """
-        ser = serial.Serial('COM3', 9600) # Bhavit's PORT
-        #ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
+        #ser = serial.Serial('COM3', 9600) # Bhavit's PORT
+        ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
         while True:
             line = ser.readline() #Read line until \n
             #print(line)
@@ -350,10 +350,10 @@ class ClassifyRealTime(QtCore.QThread):
     def _initTTS(self):
         if self.ttsFlag:
             # Instantiate the text-to-speech engine
-            self.engine = pyttsx.init()
-            #espeak.set_voice('english-us','en-us') # 'Murica!
-            #espeak.set_parameter(espeak.Parameter.Pitch,50) # medium pitch
-            #espeak.set_parameter(espeak.Parameter.Rate,120) # decent speed
+            # self.engine = pyttsx.init()
+            espeak.set_voice('english-us','en-us') # 'Murica!
+            espeak.set_parameter(espeak.Parameter.Pitch,50) # medium pitch
+            espeak.set_parameter(espeak.Parameter.Rate,120) # decent speed
             self.currentWord = ""
 
     def __del__(self):
@@ -361,17 +361,18 @@ class ClassifyRealTime(QtCore.QThread):
 
     def run(self):
         while True:
+            self.msleep(self.delay)
             while Tools.isMoving():
-                time.sleep(0.02)
-            time.sleep(self.delay)
+                self.msleep(20)
+            self.msleep(500)
             # Organize features to be used for classifier prediction
             # Scale Quaternions by 100 (NO LONGER NEEDED)
             #test = Tools.QuatMeanDataList()
             #l = [x * 100 for x in test]
             #featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + l
-            
+
             if share_var.direction != 0:
-                featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + Tools.QuatMeanDataList() #[share_var.direction]
+                featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + [share_var.direction] #Tools.QuatMeanDataList()
                 gest = np.asarray(featureList)
                 predictedGest = self.clf.predict(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
                 predictedGest = [predictedGest[0]] #convert from numpy array to list
@@ -379,17 +380,17 @@ class ClassifyRealTime(QtCore.QThread):
                 if self.debugFlag:
                     predictedGestProba = self.clf.predict_proba(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
                     predictedGest = [predictedGest[0], predictedGestProba]
-                self.sig_PredictedGest.emit(predictedGest) # Emit the predicted results to be displayed in GUI
+                #self.sig_PredictedGest.emit(predictedGest) # Emit the predicted results to be displayed in GUI
             else:
                 predictedGest = ['rest']
                 if self.ttsFlag:
                     # Text to speech of output using espeak
-                    #espeak.synth(self.currentWord)
-                    self.engine.say(self.currentWord)
-                    #self.engine.setProperty('rate',150)
-                    self.engine.runAndWait()
+                    espeak.synth(self.currentWord)
+                    # self.engine.say(self.currentWord)
+                    # self.engine.setProperty('rate',150)
+                    # self.engine.runAndWait()
                     self.currentWord = ""
-                self.sig_PredictedGest.emit(predictedGest)
+            self.sig_PredictedGest.emit(predictedGest)
 ## end of ClassifyRealTime class
 
 
@@ -404,7 +405,7 @@ class HandAnimation(QtCore.QThread):
 
     def run(self):
         pygame.init()
-        display = (800,800)
+        display = (400,400)
         pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
         # view angle, aspect ratio, z_near, z_far (z's are clipping planes)
         gluPerspective(90, 1, 1.0, 50.0)

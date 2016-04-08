@@ -13,22 +13,23 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.svm import SVC
 
-import HandsOn
+import Tools
 
 
-def optimize_SVC_parameters():
+def main():
     print(__doc__)
 
     # Loading the training and cross-validation data
-    trainingDataFile = 'fifteen_letters_noquat.csv' # Training data
-    cvDataFile = 'fifteen_letters_noquat.csv' # Cross-validation data
-    signTarget_train, signFeatures_train = HandsOn.readHandDataFromFile(trainingDataFile)
-    signTarget_test, signFeatures_test = HandsOn.readHandDataFromFile(cvDataFile)
+    trainingDataFile = 'demoday.txt' # Training data
+    cvDataFile = 'demoday_CV.txt' # Cross-validation data
+    signTarget_train, signFeatures_train = Tools.readHandDataFromFile(trainingDataFile)
+    signTarget_test, signFeatures_test = Tools.readHandDataFromFile(cvDataFile)
+    print signTarget_test
 
     # Set the parameters by cross-validation
-    tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
-                         'C': [1, 10, 100, 1000]},
-                        {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+    tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 5e-3, 1e-4, 5e-4],
+                         'C': [1, 5, 10, 50, 100, 500, 1000]},
+                        {'kernel': ['linear'], 'C': [1, 5, 10, 50, 100, 500, 1000]}]
 
     scores = ['precision', 'recall']
 
@@ -36,7 +37,7 @@ def optimize_SVC_parameters():
         print("# Tuning hyper-parameters for %s \n" % score)
 
         clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5,
-                           scoring='%s_weighted' % score)
+                           scoring='%s' % score)
         clf.fit(signFeatures_train, signTarget_train)
 
         print("Best parameters set found on development set:\n")
@@ -55,3 +56,5 @@ def optimize_SVC_parameters():
         print ""
     return 0
 ## end of optimizeSVM
+
+main()

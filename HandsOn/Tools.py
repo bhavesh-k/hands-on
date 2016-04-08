@@ -168,7 +168,7 @@ def LinAccelMeanDataStr():
 ## end of FlexMeanDataStr()
 
 def LinAccelMoving():
-    numPreviousSamples = 5
+    numPreviousSamples = 25
     movingList = [0]*3
     i = 0
     for deq in share_var.accelCollectList:
@@ -196,7 +196,12 @@ def QuatToEuler(q0, q1, q2, q3):
     """ Euler Angle calculation from quaternions """
     if (abs(q1*q2+q0*q3)!=0.5):
         pitch = math.atan2(2*q2*q0-2*q1*q3,1-2*q2*q2-2*q3*q3)
-        yaw = math.asin(2*q1*q2+2*q3*q0)
+        yaw_param = 2*q1*q2+2*q3*q0
+        if yaw_param > 1:
+            yaw_param = 1
+        elif yaw_param < -1:
+            yaw_param = -1
+        yaw = math.asin(yaw_param)
         roll = math.atan2(2*q1*q0-2*q2*q3,1-2*q1*q1-2*q3*q3)
     elif (self.q1*q2+q0*q3 > 0):
         pitch = 2*math.atan2(q1,q0)
@@ -227,7 +232,7 @@ def QuatToDir(qW, qX, qY, qZ):
 
     z_dir = hand_dir[2]
     direction = -100
-    if (z_dir > 0.75):
+    if (z_dir > 0.5):
         direction = 100 # hand pointing up
     elif (z_dir < -0.8):
         direction = 0 # hand pointing down

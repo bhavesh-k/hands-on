@@ -201,7 +201,7 @@ def drawHand():
 def main():
     pygame.init()
 
-    display = (800,800)
+    display = (400,400)
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
 
     # view angle, aspect ratio, z_near, z_far (z's are clipping planes)
