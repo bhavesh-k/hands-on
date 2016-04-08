@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1511</width>
+    <width>1534</width>
     <height>1080</height>
    </rect>
   </property>
@@ -34,7 +34,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="captureTab">
        <attribute name="title">
@@ -849,7 +849,7 @@
            <item row="0" column="1">
             <widget class="QLineEdit" name="rollLineEdit">
              <property name="maxLength">
-              <number>4</number>
+              <number>5</number>
              </property>
             </widget>
            </item>
@@ -863,7 +863,7 @@
            <item row="1" column="1">
             <widget class="QLineEdit" name="pitchLineEdit">
              <property name="maxLength">
-              <number>4</number>
+              <number>5</number>
              </property>
             </widget>
            </item>
@@ -877,7 +877,7 @@
            <item row="2" column="1">
             <widget class="QLineEdit" name="yawLineEdit">
              <property name="maxLength">
-              <number>4</number>
+              <number>5</number>
              </property>
             </widget>
            </item>
@@ -887,73 +887,96 @@
        </layout>
       </item>
       <item>
-       <widget class="QGroupBox" name="gBoxAccel">
-        <property name="title">
-         <string>Linear Acceleration</string>
-        </property>
-        <layout class="QFormLayout" name="formLayout_4">
-         <item row="0" column="0">
-          <widget class="QLabel" name="accelXLabel">
-           <property name="text">
-            <string>accelX</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="accelXLineEdit">
-           <property name="font">
-            <font>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="accelYLabel">
-           <property name="text">
-            <string>accelY</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="accelYLineEdit">
-           <property name="font">
-            <font>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="accelZLabel">
-           <property name="text">
-            <string>accelZ</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="accelZLineEdit">
-           <property name="font">
-            <font>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QGroupBox" name="gBoxAccel">
+          <property name="title">
+           <string>Linear Acceleration</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="accelXLabel">
+             <property name="text">
+              <string>accelX</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="accelXLineEdit">
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="accelYLabel">
+             <property name="text">
+              <string>accelY</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="accelYLineEdit">
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="accelZLabel">
+             <property name="text">
+              <string>accelZ</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="accelZLineEdit">
+             <property name="font">
+              <font>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="gBoxOrientation">
+          <property name="title">
+           <string>Orientation</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_6">
+           <item row="0" column="0">
+            <widget class="QLabel" name="directionLabel">
+             <property name="text">
+              <string>Direction</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="directionLineEdit"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_adds">
@@ -1044,7 +1067,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1511</width>
+     <width>1534</width>
      <height>38</height>
     </rect>
    </property>

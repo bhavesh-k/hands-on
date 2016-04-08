@@ -115,7 +115,7 @@ def TouchMeanBoolList():
     meanList = DequeMeanList(share_var.touchCollectList)
     # replace means with boolean int (0 or 1)
     for i in range(0,len(meanList)):
-        meanList[i] = 100 if (meanList[i] > touchThres) else 0
+        meanList[i] = 1000 if (meanList[i] > touchThres) else 0
     return( meanList )
 ## end of TouchMeanBoolList()
 
@@ -219,18 +219,18 @@ def EulerToDir(roll,pitch,yaw):
     return direction
 ## end of EulerToDir
 
-def QuatToDir():
+def QuatToDir(qW, qX, qY, qZ):
     """ Convert quaternions to hand direction (down, up, or other) """
-    q = (share_var.qW, share_var.qX, share_var.qY, share_var.qZ)
+    q = (qW, qX, qY, qZ)
     hand_dir = (1, 0, 0)
     hand_dir = qv_mult(q, hand_dir)
 
     z_dir = hand_dir[2]
-    direction = 3
+    direction = -100
     if (z_dir > 0.75):
-        direction = 2 # hand pointing up
+        direction = 100 # hand pointing up
     elif (z_dir < -0.8):
-        direction = 1 # hand pointing down
+        direction = 0 # hand pointing down
 
     return direction
 ## end of QuatToDir
@@ -274,7 +274,7 @@ def printHandDataToFile(fileName, str_handIdentifier):
     """
     outFile = open(fileName,'a') # append mode
     # Obtain mean of collected hand data as strings separated by "," from XDataStr() so that we can write to file
-    strHandDataOut = str_handIdentifier + "," + FlexMeanDataStr() + ',' + TouchMeanBoolStr() + ',' + QuatMeanDataStr()
+    strHandDataOut = str_handIdentifier + "," + FlexMeanDataStr() + ',' + TouchMeanBoolStr() + ',' + str(share_var.direction)
     outFile.write(strHandDataOut)
     outFile.write('\n')
     outFile.close

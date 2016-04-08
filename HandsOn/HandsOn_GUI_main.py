@@ -52,7 +52,10 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         self.logFileIterator = 1
 
         ## Set default delay for classifier
-        self.lineEditClassRtDelay.setText("4")
+        self.lineEditClassRtDelay.setText("0.5")
+
+        ## Rest Flag to know end of word
+        self.restFlag = False
 
         ## Multidimensional List for sensor display line edits for easy updating
         self.sensorLineEdits = [ [self.indexLineEdit, self.indexKnuckleLineEdit, self.middleLineEdit, self.middleKnuckleLineEdit, self.ringLineEdit, self.ringKnuckleLineEdit,  self.pinkyLineEdit, self.thumbLineEdit, self.thumbKnuckeLineEdit], \
@@ -139,10 +142,10 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         signTarget, signFeatures = Tools.readHandDataFromFile(self.trainFileName)
         # Instantiate the SVM object
         self.clf = svm.SVC(C=1, kernel='rbf',gamma=0.0001,probability=True)
-        self.clf_tree = tree.DecisionTreeClassifier() # decision tree version of classifier
+        #self.clf_tree = tree.DecisionTreeClassifier() # decision tree version of classifier
         # Train the classifiers
         self.clf.fit(signFeatures,signTarget)
-        self.clf_tree.fit(signFeatures,signTarget)
+        #self.clf_tree.fit(signFeatures,signTarget)
         self.lineEditTrainStatus.setText("Trained") #Show the classifier status
         self.btnClassifyStart.setEnabled(True) #Set the Classify Start button to enabled
         QtWidgets.QMessageBox.information(self, "Classifier", "Successfully trained classifier!")
@@ -172,11 +175,20 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
 
     def UpdatePredictionDisplay(self, predList):
         """ Updates GUI display after signal emitted by ClassifyRealTime thread indicating that a gesture has been predicted """
-        if len(predList) == 1:
-            # Only contains predicted label and no debug statistics
-            self.plainTextEditClassRT.appendPlainText(predList[0])
+        if predList[0] != "rest":
+            self.restFlag = False
+            if len(predList) == 1:
+                # Only contains predicted label and no debug statistics
+                self.plainTextEditClassRT.moveCursor(QtGui.QTextCursor.End)
+                self.plainTextEditClassRT.insertPlainText(predList[0])
+                self.plainTextEditClassRT.moveCursor(QtGui.QTextCursor.End)
+                #self.plainTextEditClassRT.appendPlainText(predList[0])
+            else:
+                self.plainTextEditClassRT.appendPlainText(predList[0] + Tools.ListToCSstr(predList[1]))
         else:
-            self.plainTextEditClassRT.appendPlainText(predList[0] + Tools.ListToCSstr(predList[1]))
+            if self.restFlag != True:
+                self.plainTextEditClassRT.appendPlainText(" ")
+                self.restFlag = True
         # Update log file
         self.LogSession(predList)
     ## end of UpdatePredictionDisplay
@@ -230,7 +242,14 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         """ Updates GUI display after signal emitted by ParseSerial thread indiciating sensor values have been updated """
         # If box is checked, display the average of the moving window rather than instantaneuous values
         dataOutAvgFlag = self.checkBoxDataOutAvg.isChecked()
-        self.lineEditFileOut.setText(str(share_var.direction))
+        directionText = " "
+        if share_var.direction == 100:
+            directionText = "Up"
+        elif share_var.direction == -100:
+            directionText = "Side"
+        else:
+            directionText = "Down"
+        self.directionLineEdit.setText(directionText)
         for i in range(0,len(share_var.sensorCollectList)):
             for j in range(0, len(share_var.sensorCollectList[i])):
                 if dataOutAvgFlag:
@@ -305,8 +324,8 @@ class SerialParse(QtCore.QThread):
 
     def run(self):
         """ Opens serial port and parses data. Emits signal to update GUI sensor display values after sensor data in share_var has been updated """
-        #ser = serial.Serial('COM3', 9600) # Bhavit's PORT
-        ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
+        ser = serial.Serial('COM3', 9600) # Bhavit's PORT
+        #ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
         while True:
             line = ser.readline() #Read line until \n
             #print(line)
@@ -335,6 +354,7 @@ class ClassifyRealTime(QtCore.QThread):
             #espeak.set_voice('english-us','en-us') # 'Murica!
             #espeak.set_parameter(espeak.Parameter.Pitch,50) # medium pitch
             #espeak.set_parameter(espeak.Parameter.Rate,120) # decent speed
+            self.currentWord = ""
 
     def __del__(self):
         self.wait()
@@ -345,23 +365,31 @@ class ClassifyRealTime(QtCore.QThread):
                 time.sleep(0.02)
             time.sleep(self.delay)
             # Organize features to be used for classifier prediction
-            test = Tools.QuatMeanDataList()
-            l = [x * 100 for x in test]
-            featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + l
-            #featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + Tools.QuatMeanDataList()
-            gest = np.asarray(featureList)
-            predictedGest = self.clf.predict(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
-            predictedGest = [predictedGest[0]] #convert from numpy array to list
-            if self.debugFlag:
-                predictedGestProba = self.clf.predict_proba(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
-                predictedGest = [predictedGest[0], predictedGestProba]
-            self.sig_PredictedGest.emit(predictedGest) # Emit the predicted results to be displayed in GUI
-            if self.ttsFlag:
-                # Text to speech of output using espeak
-                #espeak.synth(predictedGest[0])
-                self.engine.say(predictedGest[0])
-                #self.engine.setProperty('rate',150)
-                self.engine.runAndWait()
+            # Scale Quaternions by 100 (NO LONGER NEEDED)
+            #test = Tools.QuatMeanDataList()
+            #l = [x * 100 for x in test]
+            #featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + l
+            
+            if share_var.direction != 0:
+                featureList = Tools.FlexMeanDataList() + Tools.TouchMeanBoolList() + Tools.QuatMeanDataList() #[share_var.direction]
+                gest = np.asarray(featureList)
+                predictedGest = self.clf.predict(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
+                predictedGest = [predictedGest[0]] #convert from numpy array to list
+                self.currentWord = self.currentWord + predictedGest[0]
+                if self.debugFlag:
+                    predictedGestProba = self.clf.predict_proba(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
+                    predictedGest = [predictedGest[0], predictedGestProba]
+                self.sig_PredictedGest.emit(predictedGest) # Emit the predicted results to be displayed in GUI
+            else:
+                predictedGest = ['rest']
+                if self.ttsFlag:
+                    # Text to speech of output using espeak
+                    #espeak.synth(self.currentWord)
+                    self.engine.say(self.currentWord)
+                    #self.engine.setProperty('rate',150)
+                    self.engine.runAndWait()
+                    self.currentWord = ""
+                self.sig_PredictedGest.emit(predictedGest)
 ## end of ClassifyRealTime class
 
 

@@ -256,15 +256,15 @@ void loop(void)
   flexPinMap[8] = 36;
 
   // Calibrated mapping from analog values to degrees for each joint
-  flexDegCal[0][0] = 480; flexDegCal[0][1] = 657; // Middle Knuckle
-  flexDegCal[1][0] = 565; flexDegCal[1][1] = 670; // Pinky
-  flexDegCal[2][0] = 515; flexDegCal[2][1] = 665; // Ring Knuckle
-  flexDegCal[3][0] = 488; flexDegCal[3][1] = 555; // Thumb Knuckle
-  flexDegCal[4][0] = 550; flexDegCal[4][1] = 650; // Thumb
+  flexDegCal[0][0] = 490; flexDegCal[0][1] = 662; // Middle Knuckle
+  flexDegCal[1][0] = 578; flexDegCal[1][1] = 720; // Pinky
+  flexDegCal[2][0] = 500; flexDegCal[2][1] = 697; // Ring Knuckle
+  flexDegCal[3][0] = 488; flexDegCal[3][1] = 600; // Thumb Knuckle
+  flexDegCal[4][0] = 590; flexDegCal[4][1] = 662; // Thumb
   flexDegCal[5][0] = 542; flexDegCal[5][1] = 705; // Index Knuckle
-  flexDegCal[6][0] = 528; flexDegCal[6][1] = 665; // Middle
-  flexDegCal[7][0] = 499; flexDegCal[7][1] = 650; // Index
-  flexDegCal[8][0] = 498; flexDegCal[8][1] = 737; // Ring
+  flexDegCal[6][0] = 539; flexDegCal[6][1] = 680; // Middle
+  flexDegCal[7][0] = 503; flexDegCal[7][1] = 708; // Index
+  flexDegCal[8][0] = 503; flexDegCal[8][1] = 752; // Ring
   
   for (int i = 0; i < 9; i++){
     flexRaw[i] = analogRead(flexPinMap[i]);
