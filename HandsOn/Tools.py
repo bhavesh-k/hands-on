@@ -185,7 +185,7 @@ def isMoving():
     """ Returns a boolean if the user is moving determined wtih the collected linear acceleration """
     movingList = LinAccelMoving()
     moveFlag = False;
-    linAccelThres = 0.25
+    linAccelThres = 0.4
     for direction in movingList:
         if direction > linAccelThres:
             moveFlag = True;

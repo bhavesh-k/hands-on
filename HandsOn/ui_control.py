@@ -3,7 +3,7 @@ import HandsOn
 import threading
 import serial
 import time
-# from pymouse import PyMouse
+from pymouse import PyMouse
 # from pykeyboard import PyKeyboard
 
 def eulerDisplay():
@@ -31,6 +31,10 @@ def mouseControl():
         # if (y_pos > y_dim): y_pos = y_dim
 
         m.move(x_pos, y_pos)
+        
+        if share_var.flexIndexFinger > 45:
+            m.click(x_pos,y_pos)
+    
 ## end mouseControl
 
 def arrowControl():
@@ -94,7 +98,7 @@ def main():
     serialThread.setDaemon(True)
     serialThread.start()
 
-    mouseThread = threading.Thread(target=eulerDisplay)
+    mouseThread = threading.Thread(target=mouseControl)
     mouseThread.setDaemon(True)
     mouseThread.start()
 
