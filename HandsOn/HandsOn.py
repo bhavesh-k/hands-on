@@ -15,7 +15,7 @@ import share_var
 import numpy as np
 from sklearn import svm
 from sklearn import tree
-import pyttsx
+#import pyttsx
 from Tools import *
 
 ## Capture hand data or predict function
@@ -68,7 +68,7 @@ def pseudoMain(delay, debugFlag, ttsFlag):
             print("SVM Fit Completed\n")
         elif modeEnable == 3:
             # Load SVM From File
-            print "This feature has not yet been enabled\n"
+            print("This feature has not yet been enabled\n")
         elif modeEnable == 4:
             # Predict Hand Gestures
             if (svmFlag != True) :
@@ -85,10 +85,10 @@ def pseudoMain(delay, debugFlag, ttsFlag):
                         featureList = FlexMeanDataList() + TouchMeanBoolList() + QuatMeanDataList()
                         gest = np.asarray(featureList)
                         svmPred = clf.predict(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
-                        print "Prediction: ", svmPred
+                        print("Prediction: ", svmPred)
                         if debugFlag:
                             svmPredProb = clf.predict_proba(gest.reshape(1,-1)) # change to clf_tree for decision tree classfxn
-                            print "Probability Prediction: ", svmPredProb
+                            print("Probability Prediction: ", svmPredProb)
                         #kernal_svm_time = kernal_svm_time - time()
                         #print "Time to predict: ", kernal_svm_time
                         if ttsFlag:
@@ -117,32 +117,31 @@ def parseSerialHandData(ser):
 def parseLineData(line):
     lineList = line.split()
     if len(lineList) > 1:
-        #print(lineList) # Testing Purposes
-        if lineList[0] == "Alt:":
+        if lineList[0] == b"Alt:":
             share_var.alt = float(lineList[1])
-        elif lineList[0] == "Temp:":
+        elif lineList[0] == b"Temp:":
             share_var.temp = float(lineList[1])
         #Calibration Values
-        elif lineList[0] == "System:":
+        elif lineList[0] == b"System:":
             share_var.sysCal   = int(lineList[1])
             share_var.gyroCal  = int(lineList[3])
             share_var.accelCal = int(lineList[5])
             share_var.magCal   = int(lineList[7])
         # Fingers Part 1
-        elif lineList[0] == "FingerDegrees:":
+        elif lineList[0] == b"FingerDegrees:":
             share_var.flexIndexFinger = float(lineList[1])
             share_var.flexMiddleFinger = float(lineList[2])
             share_var.flexRingFinger = float(lineList[3])
             share_var.flexPinkyFinger = float(lineList[4])
             share_var.flexThumb = float(lineList[5])
         # Fingers Part 2
-        elif lineList[0] == "KnuckleDegrees:":
+        elif lineList[0] == b"KnuckleDegrees:":
             share_var.flexIndexKnuckle = float(lineList[1])
             share_var.flexMiddleKnuckle = float(lineList[2])
             share_var.flexRingKnuckle = float(lineList[3])
             share_var.flexThumbKnuckle = float(lineList[4])
         # Quaternions
-        elif lineList[0] == "Quaternions":
+        elif lineList[0] == b"Quaternions":
             share_var.qW = float(lineList[1])/100.0
             share_var.qX = float(lineList[2])/100.0
             share_var.qY = float(lineList[3])/100.0
@@ -154,12 +153,12 @@ def parseLineData(line):
             #share_var.direction = EulerToDir(share_var.roll,share_var.pitch,share_var.yaw)
             share_var.direction = QuatToDir(share_var.qW, share_var.qX, share_var.qY, share_var.qZ)
         #Linear Acceleration
-        elif lineList[0] == "Acceleration":
+        elif lineList[0] == b"Acceleration":
             share_var.accelX = float(lineList[1])
             share_var.accelY = float(lineList[2])
             share_var.accelZ = float(lineList[3])
         # Touch Sensors
-        elif lineList[0] == "TouchSensors:":
+        elif lineList[0] == b"TouchSensors:":
             share_var.touchIndSide = int(lineList[1])
             share_var.touchIndTop = int(lineList[2])
             share_var.touchMidTop = int(lineList[3])

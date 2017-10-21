@@ -16,8 +16,8 @@ import numpy as np
 import collections
 from sklearn import svm
 from sklearn import tree
-import pyttsx
-from espeak import espeak
+import pyttsx3
+#from espeak import espeak
 
 from PyQt5 import QtCore, QtGui, QtWidgets # Import Qt main modules
 import HandsOn_GUI_Layout # Imports our designed .ui layout that was converted to .py
@@ -52,7 +52,7 @@ class DevApp(QtWidgets.QMainWindow, HandsOn_GUI_Layout.Ui_MainWindow, QtCore.QOb
         self.logFileIterator = 1
 
         ## Set default delay for classifier
-        self.lineEditClassRtDelay.setText("0.5")
+        self.lineEditClassRtDelay.setText("500")
 
         ## Rest Flag to know end of word
         self.restFlag = False
@@ -325,7 +325,7 @@ class SerialParse(QtCore.QThread):
     def run(self):
         """ Opens serial port and parses data. Emits signal to update GUI sensor display values after sensor data in share_var has been updated """
         #ser = serial.Serial('COM3', 9600) # Bhavit's PORT
-        ser = serial.Serial('/dev/ttyACM0', 9600) #Bhavesh's PORT
+        ser = serial.Serial('COM27', 9600) #Bhavesh's PORT
         while True:
             line = ser.readline() #Read line until \n
             #print(line)
@@ -350,10 +350,10 @@ class ClassifyRealTime(QtCore.QThread):
     def _initTTS(self):
         if self.ttsFlag:
             # Instantiate the text-to-speech engine
-            # self.engine = pyttsx.init()
-            espeak.set_voice('english-us','en-us') # 'Murica!
-            espeak.set_parameter(espeak.Parameter.Pitch,50) # medium pitch
-            espeak.set_parameter(espeak.Parameter.Rate,120) # decent speed
+            self.engine = pyttsx3.init()
+            #espeak.set_voice('english-us','en-us') # 'Murica!
+            #espeak.set_parameter(espeak.Parameter.Pitch,50) # medium pitch
+            #espeak.set_parameter(espeak.Parameter.Rate,120) # decent speed
             self.currentWord = ""
 
     def __del__(self):
@@ -385,10 +385,10 @@ class ClassifyRealTime(QtCore.QThread):
                 predictedGest = ['rest']
                 if self.ttsFlag:
                     # Text to speech of output using espeak
-                    espeak.synth(self.currentWord)
-                    # self.engine.say(self.currentWord)
-                    # self.engine.setProperty('rate',150)
-                    # self.engine.runAndWait()
+                    #espeak.synth(self.currentWord)
+                    self.engine.say(self.currentWord)
+                    self.engine.setProperty('rate',150)
+                    self.engine.runAndWait()
                     self.currentWord = ""
             self.sig_PredictedGest.emit(predictedGest)
 ## end of ClassifyRealTime class

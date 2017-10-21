@@ -155,10 +155,10 @@ void setup(void)
   displaySensorDetails();
   displaySensorStatus();
 
-  uint16_t modeRead = bno.readMode();
+  /* uint16_t modeRead = bno.readMode();
   Serial.print("Operation Mode:  ");
   Serial.println(modeRead);
-  Serial.println(F(""));
+  Serial.println(F("")); */
 }
 
 /**************************************************************************/
@@ -337,7 +337,7 @@ void loop(void)
    * RingSide, PinkySide, PinkyTop
    */
   touchPinMap[0] = 15; touchPinMap[1] = 16; touchPinMap[2] = 17; touchPinMap[3] = 23;
-  touchPinMap[4] = 22; touchPinMap[5] = 0; touchPinMap[6] = 1;
+  touchPinMap[4] = 22; touchPinMap[5] = 1; touchPinMap[6] = 0;
 
   for (int i = 0; i < 7; i++){
     touchRaw[i] = touchRead(touchPinMap[i]);
