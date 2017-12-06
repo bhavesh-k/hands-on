@@ -6,8 +6,8 @@
 3. Check the Serial Monitor to ensure you are getting sensor readings.
 4. Run the Python program (HandsOn_GUI_main.py)
 
-# Contact #
+# Contributors #
 
-1. Bhavesh Kakwani 	- bhavesh.kakwani@protonmail.com
-2. Tom Yang			- tomyang1992@hotmail.com
-3. Bhavit Patel 	- bhavit.r.patel@gmail.com
+1. Bhavesh Kakwani
+2. Tom Yang
+3. Bhavit Patel
