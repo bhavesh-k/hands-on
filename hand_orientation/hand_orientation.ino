@@ -1,3 +1,9 @@
+/*
+  Arduino code for capturing, pre-processing and transmitting
+  data from sensors on the HandsOn sign language glove
+
+  Authors: Bhavesh Kakwani and Bhavit Patel
+*/
 
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -163,8 +169,7 @@ void setup(void)
 
 /**************************************************************************/
 /*
-    Arduino loop function, called once 'setup' is complete (your own code
-    should go here)
+    Arduino loop function, called once 'setup' is complete
 */
 /**************************************************************************/
 void loop(void)
@@ -196,41 +201,15 @@ void loop(void)
   /* Quaternions */
   imu::Quaternion quat = bno.getQuat();
   Serial.println(quaternions + quat.w()*100 + sp + quat.x()*100 + sp + quat.y()*100 + sp + quat.z()*100);
-//  Serial.println("Quaternions");
-//  Serial.print("   qW: ");
-//  Serial.print(quat.w(),4);
-//  Serial.print(" qX: ");
-//  Serial.print(quat.x(),4);
-//  Serial.print(" qY: ");
-//  Serial.print(quat.y(),4);
-//  Serial.print(" qZ: ");
-//  Serial.println(quat.z(),4);
 
   /* Also send calibration data for each sensor. */
   uint8_t sys, gyro, accel, mag = 0;
   bno.getCalibration(&sys, &gyro, &accel, &mag);
   Serial.println(calibration + sys + sp + gyro + sp + accel + sp + mag);
-//  Serial.println("Calibration");
-//  Serial.print("   System: "); 
-//  Serial.print(sys, DEC);
-//  Serial.print(" Gyro: ");
-//  Serial.print(gyro, DEC);
-//  Serial.print(" Accel: ");
-//  Serial.print(accel, DEC);
-//  Serial.print(" Mag: ");
-//  Serial.println(mag, DEC);
    
   /*Get acceleration information*/
   imu::Vector<3> linearAccel = bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
   Serial.println(acceleration + linearAccel[0] + sp + linearAccel[1] + sp + linearAccel[2]);
-//  Serial.println("Acceleration");
-//  Serial.print("   aX: ");
-//  Serial.print(linearAccel[0],DEC); // X
-//  Serial.print(" aY: ");
-//  Serial.print(linearAccel[1],DEC); // Y
-//  Serial.print(" aZ: ");
-//  Serial.print(linearAccel[2],DEC); // Z
-//  Serial.println(F(""));
 
   /* Flex Sensors use simple voltage divider circuit:
    * VCC (3.3V) --> R=26.1kOhms ---> VOUT
@@ -274,32 +253,6 @@ void loop(void)
   // print the finger and knuckle bending degrees to serial output
   Serial.println(fingerDegrees + flexDegrees[7] + sp + flexDegrees[6] + sp + flexDegrees[8] + sp + flexDegrees[1] + sp + flexDegrees[4]);
   Serial.println(knuckleDegrees + flexDegrees[5] + sp + flexDegrees[0] + sp + flexDegrees[2] + sp + flexDegrees[3]);
-
-//  Serial.print("   Index: ");
-//  Serial.print(flexDegrees[7],DEC);
-//  Serial.print(F(" "));
-//  Serial.print("Middle: ");
-//  Serial.print(flexDegrees[6],DEC);
-//  Serial.print(F(" "));
-//  Serial.print("Ring: ");
-//  Serial.print(flexDegrees[8],DEC);
-//  Serial.print(F(" "));
-//  Serial.print("Pinky: ");
-//  Serial.println(flexDegrees[1],DEC);
-//  Serial.print("   IndexKnuckle: ");
-//  Serial.print(flexDegrees[5],DEC);
-//  Serial.print(F(" "));
-//  Serial.print("MiddleKnuckle: ");
-//  Serial.print(flexDegrees[0],DEC);
-//  Serial.print(F(" "));
-//  Serial.print("RingKnuckle: ");
-//  Serial.print(flexDegrees[2],DEC);
-//  Serial.print(F(" "));
-//  Serial.print("Thumb: ");
-//  Serial.print(flexDegrees[4],DEC);
-//  Serial.print(F(" "));
-//  Serial.print("ThumbKnuckle: ");
-//  Serial.println(flexDegrees[3],DEC);
 
 //  Serial.println("FlexSensorBending(raw)");
 //  Serial.print("   Index: ");
